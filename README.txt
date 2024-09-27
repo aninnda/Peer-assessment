@@ -1,6 +1,7 @@
 Project description
 
 Authors:
+
 Samy Mezimez 40275766
 Daniel Pinto 40276779
 Aninnda Kumar Datta 40298954
