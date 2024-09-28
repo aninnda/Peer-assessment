@@ -7,6 +7,7 @@ const App: React.FC = () => {
   return (
     <div>
       <Navbar />
+      <TeamForm />    
     </div>
   );
 }
