@@ -6,8 +6,7 @@ import TeamForm from "./components/InstructorTeamForm"
 const App: React.FC = () => {
   return (
     <div>
-      <Navbar />
-      <TeamForm />    
+      <Navbar />    
     </div>
   );
 }
