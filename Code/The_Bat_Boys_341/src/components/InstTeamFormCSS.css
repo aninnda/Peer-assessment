@@ -1,0 +1,8 @@
+form {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 25px;
+    box-shadow: 0 2px 8px rgb(145, 138, 138);
+}
