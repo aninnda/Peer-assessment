@@ -1,3 +1,4 @@
+Helped with CSS on the login page
 Contributed to creating back end.
 Giving meeting time and making sure everyone was present and ready to work
 Looked at the work done by all the team 
