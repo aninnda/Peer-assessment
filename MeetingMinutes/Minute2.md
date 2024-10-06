@@ -6,7 +6,7 @@
 - Samy
 - Dylan
 - Daniel
-- Anninda
+- Aninnda
 - Karim
 - Aymen
 
