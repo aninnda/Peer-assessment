@@ -1,30 +1,28 @@
 // import ListGroup from "./components/ListGroup";
 // import Navbar from "./components/Navbar";
 // import TeamForm from "./components/InstructorTeamForm"
-import { useRef, useState, useEffect, useContext } from 'react';
-import './Login.css';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import AuthContext from '../context/AuthProvider';
+import './Login.css';
 
 
-//TO REFACTOR and put into new file Login.tsx.
-
-const Login: React.FC = () => {
+const Login = () => {
 
     const { setAuth } = useContext(AuthContext) as { setAuth: (auth: any) => void };
     const userRef = useRef<HTMLInputElement>(null);
-    const errRef = useRef();
+    const errRef = useRef<HTMLParagraphElement>(null);
         
     // State variables for student login
-    const [studentId, setStudentId] = useState<string>('');
-    const [studentPassword, setStudentPassword] = useState<string>('');
+    const [studentId, setStudentId] = useState('');
+    const [studentPassword, setStudentPassword] = useState('');
 
 
     // State variables for instructor login
-    const [instructorId, setInstructorId] = useState<string>('');
-    const [instructorPassword, setInstructorPassword] = useState<string>('');
+    const [instructorId, setInstructorId] = useState('');
+    const [instructorPassword, setInstructorPassword] = useState('');
 
     // State variables for error messages
-    const [errMsg, setErrMsg] = useState<string>('');
+    const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState('false');
 
     useEffect(() => {
@@ -42,6 +40,31 @@ const Login: React.FC = () => {
     const handleStudentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log('Student Login', { studentId, studentPassword });
+
+        // try {
+        //     const res = await axios.post(LOGIN_URL, 
+        //         JSON.stringify({ studentId, studentPassword }), 
+        //         { 
+        //             headers: { 'Content-Type': 'application/json'},
+        //             withCredentials: true 
+        //         }
+        //     );
+        //     console.log(JSON.stringify(res?.data));
+        //     //console.log(JSON.stringify(res));  //optional
+        //     const accessToken = res?.data?.accessToken;
+        //     //const roles = res?.data?.roles;  //optional
+        //     setAuth({ studentId, studentPassword, accessToken }); //add roles if needed
+        //     setStudentPassword('');
+        //     setStudentPassword('');
+        //     setSuccess('true');
+        // } catch (err) {
+        //     errRef.current?.focus();
+        //     console.error(err);
+        //     setErrMsg('Invalid credentials');
+        //     return;
+        // }
+
+
         setStudentPassword('');
         setStudentPassword('');
         setSuccess('true');
@@ -61,14 +84,27 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div className="container">
+        <> 
+        {success === 'true' ? (
+            <section>
+                <h1>You are logged in!</h1>
+                <br />
+                <p>
+                    <a href="#">Go to Dashboard</a>
+                </p>
+            </section>
+        ) : (        
+        <div className="error-section">
+            <p ref={errRef} className={errMsg ? "errMsg" :
+            "offscreen"} aria-live="assertive"></p>
+        
             <h1>Login</h1>
             <div className="login-section">
                 <h2>Student Login</h2>
                 <form onSubmit={handleStudentSubmit}>
                 <input 
                     type="text"
-                    id='username' 
+                    id='studentUsername' 
                     placeholder="Student ID"
                     ref={userRef}
                     autoComplete='off' 
@@ -78,7 +114,7 @@ const Login: React.FC = () => {
                 />
                 <input 
                     type="password" 
-                    id='password'
+                    id='studentPassword'
                     placeholder="Password"
                     value={studentPassword}
                     onChange={(e) => setStudentPassword(e.target.value)}
@@ -92,7 +128,7 @@ const Login: React.FC = () => {
                 <form onSubmit={handleInstructorSubmit}>
                     <input 
                         type="text"
-                        id='username' 
+                        id='instructorUsername' 
                         placeholder="Instructor ID"
                         ref={userRef}
                         autoComplete='off' 
@@ -102,7 +138,7 @@ const Login: React.FC = () => {
                     />
                     <input 
                     type="password" 
-                    id='password'
+                    id='instructorPassword'
                     placeholder="Password"
                     value={instructorPassword}
                     onChange={(e) => setInstructorPassword(e.target.value)}
@@ -112,7 +148,9 @@ const Login: React.FC = () => {
                 </form>
             </div>
         </div>
-    );
+        )}
+        </>
+    ); 
 };
 
 
