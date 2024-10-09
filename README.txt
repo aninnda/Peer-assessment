@@ -21,6 +21,7 @@ npm i axios
 npm i cors 
 npm i express bcrypt
 npm i nodemon
+npm i bootstrap //No need to install if everything else works fine
 
 VS Code Extensions:
 REST client
@@ -31,3 +32,20 @@ Open 2 terminal -->
     2. code/server
 On both terminal write "npm run dev"
 Open http://localhost:5173
+Using request.rest, create users using POST and /users
+Login with newly created users (userId, password, role)
+To see created users open http://localhost:3000/users
+
+
+TO DO URGENTLY 
+Fix issues on github and respect format given in slides (User stories, tasks, checkboxes for requirements etc...)
+Fix the sprint 1 excel file according to the work done for sprint 1
+Finish sprint 2 excel file and give everyone tasks to work on
+Add details to meeting minutes 1-2-3 according to format online
+
+Add Homepage to website
+Add functionalities for intructors to create teams 
+Finish everything needed to be done for sprint 1
+
+Start working on sprint 2
+
