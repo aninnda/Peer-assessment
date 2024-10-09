@@ -1,32 +1,23 @@
-// import ListGroup from "./components/ListGroup";
-// import Navbar from "./components/Navbar";
-// import TeamForm from "./components/InstructorTeamForm"
-import React, { useRef, useState, useEffect, useContext } from 'react';
-import AuthContext from '../context/AuthProvider';
+import React, { useRef, useState, useEffect } from 'react';
 import './Login.css';
-import ToggleButton from './ToggleButton';
+import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
 
-    const { setAuth } = useContext(AuthContext) as { setAuth: (auth: any) => void };
     const userRef = useRef<HTMLInputElement>(null);
-    const errRef = useRef<HTMLParagraphElement>(null);
+
+    // Navigate to the dashboard
+    const navigate = useNavigate();
 
     //Toggle between student and instructor login
     const [isStudentLogin, setIsStudentLogin] = useState(true);
         
-    // State variables for student login
-    const [studentId, setStudentId] = useState('');
-    const [studentPassword, setStudentPassword] = useState('');
+    // State variables login
+    const [userId, setUserId] = useState('');
+    const [password, setPassword] = useState('');
 
-
-    // State variables for instructor login
-    const [instructorId, setInstructorId] = useState('');
-    const [instructorPassword, setInstructorPassword] = useState('');
-
-    // State variables for error messages
-    const [errMsg, setErrMsg] = useState('');
+    // State variables for success
     const [success, setSuccess] = useState('false');
 
     useEffect(() => {
@@ -36,132 +27,81 @@ const Login = () => {
     }, []);
 
     useEffect(() => {
-        setErrMsg('');
-    }
-    , [studentId, studentPassword, instructorId, instructorPassword]);
+      if (success === 'true') {
+        navigate('/dashboard');
+      }
+    });
 
     // Toggle between student and instructor login
     const toggleLoginType = () => {
         setIsStudentLogin(!isStudentLogin);
     };
 
-    // Handle student login submission
-    const handleStudentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log('Student Login', { studentId, studentPassword });
+    // Handle login submission for both student and instructor
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
 
-        // try {
-        //     const res = await axios.post(LOGIN_URL, 
-        //         JSON.stringify({ studentId, studentPassword }), 
-        //         { 
-        //             headers: { 'Content-Type': 'application/json'},
-        //             withCredentials: true 
-        //         }
-        //     );
-        //     console.log(JSON.stringify(res?.data));
-        //     //console.log(JSON.stringify(res));  //optional
-        //     const accessToken = res?.data?.accessToken;
-        //     //const roles = res?.data?.roles;  //optional
-        //     setAuth({ studentId, studentPassword, accessToken }); //add roles if needed
-        //     setStudentPassword('');
-        //     setStudentPassword('');
-        //     setSuccess('true');
-        // } catch (err) {
-        //     errRef.current?.focus();
-        //     console.error(err);
-        //     setErrMsg('Invalid credentials');
-        //     return;
-        // }
+      const role = isStudentLogin ? 'student' : 'instructor';  
 
+      const response = await fetch('http://localhost:3000/users/login', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, password, role }),
+      });
 
-        setStudentPassword('');
-        setStudentPassword('');
+      const result = await response.text();
+      alert(result);
+
+      if (result === 'Success') {
         setSuccess('true');
-
-        setAuth({ studentId, studentPassword });
-    };
-
-
-    // Handle instructor login submission
-    const handleInstructorSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log("Instructor Login:", { instructorId, instructorPassword });
-        setInstructorId('');
-        setInstructorPassword('');
-        setSuccess('true');
-        setAuth({ instructorId, instructorPassword });
+      } else {
+        console.log('Invalid username, password or role');
+      }
     };
 
     return (
         <> 
         {success === 'true' ? (
             <section>
+                <h1>Redirecting...</h1>
 
-                <h1>To redirect to next page when back end is done</h1>
-                <br />
-                <p>Fruit list is from backend</p>
             </section>
         ) : (        
-        
-                <div className='container'>
-                  <div className="login-section">
+          <div className='container'>
+            <div className="login-section">
 
-                    <button className="toggle-button" onClick={toggleLoginType}>
-                      {isStudentLogin ? 'Switch to Instructor' : 'Switch to Student'}
-                    </button>
-                    
-                    {isStudentLogin ? (
-                      <div>
-                        <h2>Student Login</h2>
-                        <form onSubmit={handleStudentSubmit}>
-                          <input
-                            type="text"
-                            id="studentUsername"
-                            placeholder="Student ID"
-                            value={studentId}
-                            onChange={(e) => setStudentId(e.target.value)}
-                            required
-                          />
-                          <input
-                            type="password"
-                            id="studentPassword"
-                            placeholder="Password"
-                            value={studentPassword}
-                            onChange={(e) => setStudentPassword(e.target.value)}
-                            required
-                          />
-                          <button type="submit">Login as Student</button>
-                        </form>
-                      </div>
-                    ) : (
-                      <div>
-                        <h2>Instructor Login</h2>
-                        <form onSubmit={handleInstructorSubmit}>
-                          <input
-                            type="text"
-                            id="instructorUsername"
-                            placeholder="Instructor ID"
-                            value={instructorId}
-                            onChange={(e) => setInstructorId(e.target.value)}
-                            required
-                          />
-                          <input
-                            type="password"
-                            id="instructorPassword"
-                            placeholder="Password"
-                            value={instructorPassword}
-                            onChange={(e) => setInstructorPassword(e.target.value)}
-                            required
-                          />
-                          <button type="submit">Login as Instructor</button>
-                        </form>
-                      </div>
-                    )}
-                </div>
+              <button className="toggle-button" onClick={toggleLoginType}>
+                {isStudentLogin ? 'Switch to Instructor' : 'Switch to Student'}
+              </button>
+
+              <div>
+                <h2>{isStudentLogin ? 'Student Login' : 'Instructor Login'}</h2>  
+                <form onSubmit={handleSubmit}>
+                  <input
+                    type="text"
+                    id="userId"
+                    placeholder={isStudentLogin ? "Student ID" : "Instructor ID"}
+                    value={userId}
+                    onChange={(e) => setUserId(e.target.value)}
+                    required
+                  />
+                  <input
+                    type="password"
+                    id="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button type="submit">
+                    Login as {isStudentLogin ? "Student" : "Instructor"}
+                  </button>
+                </form>
+              </div>      
             </div>
-        
+          </div>
         )}
-        </>
+      </>
     ); 
 };
 

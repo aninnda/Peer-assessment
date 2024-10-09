@@ -13,3 +13,21 @@ Aymen Mefti 40299611
 
 https://liveconcordia-my.sharepoint.com/:x:/g/personal/an_datta_live_concordia_ca/ESvfvA-PWkBFgd6LmiTCUGsBnDO1w4oGn-RXZWzlCd9Wtg?e=GRJdQ9
 
+
+Dependencies:
+To be installed both in cd client/the_bat_boys and cd server
+npm i express
+npm i axios
+npm i cors 
+npm i express bcrypt
+npm i nodemon
+
+VS Code Extensions:
+REST client
+
+To run website:
+Open 2 terminal -->
+    1. code/client/the_bat_boys
+    2. code/server
+On both terminal write "npm run dev"
+Open http://localhost:5173

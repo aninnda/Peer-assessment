@@ -1,32 +1,63 @@
-const http = require('http');
+const express = require('express');
+const app = express();
+const cors = require('cors');
+const corsOptions = { origin: 'http://localhost:5173' };
+const bcrypt = require('bcrypt'); //To hash passwords
 
-// Create a simple CORS setup manually
-const allowCors = (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
-    res.setHeader('Access-Control-Allow-Methods', 'GET');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-};
+//Const user to be replaced with database
+const users = [
 
-// Create the HTTP server
-const server = http.createServer((req, res) => {
-    if (req.method === 'GET' && req.url === '/api') {
-        // Set the CORS headers
-        allowCors(req, res);
+];
 
-        // Set the response content type to JSON
-        res.setHeader('Content-Type', 'application/json');
-        res.writeHead(200);
+app.use(express.json());
+app.use(cors(corsOptions));
 
-        // Respond with the JSON data
-        res.end(JSON.stringify({ "fruits": ["apple", "banana", "orange"] }));
-    } else {
-        // Handle other routes or methods
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('Not Found');
+app.get('/api', (req, res) => {
+    
+    res.json();
+
+});
+
+app.get('/users', (req, res) => {
+    res.json(users);
+});
+
+app.get('/users/login', (req, res) => {
+    res.json(users);
+});
+
+//Add users (register)
+app.post('/users', async (req, res) => {
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        //console.log(salt);
+        //console.log(hashedPassword);
+        const user = { name: req.body.name, password: hashedPassword, role: req.body.role };
+        users.push(user);
+        res.status(201).send();
+    } catch {
+        res.status(500).send();
     }
 });
 
-// Listen on port 3000
-server.listen(3000, () => {
+
+//Login
+app.post('/users/login', async (req, res) => {
+    const user = users.find(user => user.name === req.body.name && user.role === req.body.role); ;
+    if (user == null) {
+        return res.status(400).send('Cannot find user');
+    }
+    try {
+        if(await bcrypt.compare(req.body.password, user.password)) {
+            res.send('Success');
+        } else {
+            res.send('Not Allowed');
+        }
+    } catch {
+        res.status(500).send();
+    }
+});
+
+app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
