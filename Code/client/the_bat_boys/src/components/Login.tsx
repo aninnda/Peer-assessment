@@ -4,6 +4,7 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
 import AuthContext from '../context/AuthProvider';
 import './Login.css';
+import ToggleButton from './ToggleButton';
 
 
 const Login = () => {
@@ -11,6 +12,9 @@ const Login = () => {
     const { setAuth } = useContext(AuthContext) as { setAuth: (auth: any) => void };
     const userRef = useRef<HTMLInputElement>(null);
     const errRef = useRef<HTMLParagraphElement>(null);
+
+    //Toggle between student and instructor login
+    const [isStudentLogin, setIsStudentLogin] = useState(true);
         
     // State variables for student login
     const [studentId, setStudentId] = useState('');
@@ -35,6 +39,11 @@ const Login = () => {
         setErrMsg('');
     }
     , [studentId, studentPassword, instructorId, instructorPassword]);
+
+    // Toggle between student and instructor login
+    const toggleLoginType = () => {
+        setIsStudentLogin(!isStudentLogin);
+    };
 
     // Handle student login submission
     const handleStudentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -87,67 +96,70 @@ const Login = () => {
         <> 
         {success === 'true' ? (
             <section>
-                <h1>You are logged in!</h1>
+
+                <h1>To redirect to next page when back end is done</h1>
                 <br />
-                <p>
-                    <a href="#">Go to Dashboard</a>
-                </p>
+                <p>Fruit list is from backend</p>
             </section>
         ) : (        
-        <div className="error-section">
-            <p ref={errRef} className={errMsg ? "errMsg" :
-            "offscreen"} aria-live="assertive"></p>
         
-            <h1>Login</h1>
-            <div className="login-section">
-                <h2>Student Login</h2>
-                <form onSubmit={handleStudentSubmit}>
-                <input 
-                    type="text"
-                    id='studentUsername' 
-                    placeholder="Student ID"
-                    ref={userRef}
-                    autoComplete='off' 
-                    value={studentId}
-                    onChange={(e) => setStudentId(e.target.value)}
-                    required
-                />
-                <input 
-                    type="password" 
-                    id='studentPassword'
-                    placeholder="Password"
-                    value={studentPassword}
-                    onChange={(e) => setStudentPassword(e.target.value)}
-                    required
-                />
-                <button type="submit">Login as Student</button>
-                </form>
+                <div className='container'>
+                  <div className="login-section">
+
+                    <button className="toggle-button" onClick={toggleLoginType}>
+                      {isStudentLogin ? 'Switch to Instructor' : 'Switch to Student'}
+                    </button>
+                    
+                    {isStudentLogin ? (
+                      <div>
+                        <h2>Student Login</h2>
+                        <form onSubmit={handleStudentSubmit}>
+                          <input
+                            type="text"
+                            id="studentUsername"
+                            placeholder="Student ID"
+                            value={studentId}
+                            onChange={(e) => setStudentId(e.target.value)}
+                            required
+                          />
+                          <input
+                            type="password"
+                            id="studentPassword"
+                            placeholder="Password"
+                            value={studentPassword}
+                            onChange={(e) => setStudentPassword(e.target.value)}
+                            required
+                          />
+                          <button type="submit">Login as Student</button>
+                        </form>
+                      </div>
+                    ) : (
+                      <div>
+                        <h2>Instructor Login</h2>
+                        <form onSubmit={handleInstructorSubmit}>
+                          <input
+                            type="text"
+                            id="instructorUsername"
+                            placeholder="Instructor ID"
+                            value={instructorId}
+                            onChange={(e) => setInstructorId(e.target.value)}
+                            required
+                          />
+                          <input
+                            type="password"
+                            id="instructorPassword"
+                            placeholder="Password"
+                            value={instructorPassword}
+                            onChange={(e) => setInstructorPassword(e.target.value)}
+                            required
+                          />
+                          <button type="submit">Login as Instructor</button>
+                        </form>
+                      </div>
+                    )}
+                </div>
             </div>
-            <div className="login-section">
-                <h2>Instructor Login</h2>
-                <form onSubmit={handleInstructorSubmit}>
-                    <input 
-                        type="text"
-                        id='instructorUsername' 
-                        placeholder="Instructor ID"
-                        ref={userRef}
-                        autoComplete='off' 
-                        value={instructorId}
-                        onChange={(e) => setInstructorId(e.target.value)}
-                        required
-                    />
-                    <input 
-                    type="password" 
-                    id='instructorPassword'
-                    placeholder="Password"
-                    value={instructorPassword}
-                    onChange={(e) => setInstructorPassword(e.target.value)}
-                    required
-                    />
-                    <button type="submit">Login as Instructor</button>
-                </form>
-            </div>
-        </div>
+        
         )}
         </>
     ); 

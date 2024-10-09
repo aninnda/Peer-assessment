@@ -1,48 +1,82 @@
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(to right, #4facfe, #00f2fe);
-  }
+  margin: 0;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: flex-end; /* Align the container to the right */
+  align-items: center;
+  background-color: #fffb8f; /* Bright yellow background */
+}
+
+.container {
+  background-color: #f2f2f2; /* Neutral light gray for the container */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 600px; /* Set a constant width (adjust this as needed) */
+  height: 100vh; /* Full height of the screen */
+  margin: 0; /* Remove any default margin */
   
-  .container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    width: 400px; /* Increased width for two sections */
-  }
+  position: fixed; /* Fixed positioning to keep it on the right side */
+  right: 0; /* Stick it to the right */
+  top: 0; /* Start at the top */
   
-  h1 {
-    text-align: center;
-    color: #333;
-  }
-  
-  .login-section {
-    margin: 20px 0; /* Space between sections */
-  }
-  
-  input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  button {
-    width: 100%;
-    padding: 10px;
-    background-color: #4facfe;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #00f2fe;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Vertically center the content */
+  align-items: center; /* Horizontally center the content */
+}
+
+h2 {
+  color: #333; /* Dark gray text */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  width: 100%; /* Take full width of the container */
+}
+
+.login-section {
+  margin: 20px 0;
+}
+
+input {
+  width: 478px;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #ffffff; /* White input fields */
+  color: #333; /* Dark text inside input */
+
+  /* Center the input fields */
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+button {
+  width: 500px;
+  padding: 10px;
+  background-color: #808080; /* Neutral gray for the button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+button:hover {
+  background-color: #a9a9a9; /* Slightly lighter gray on hover */
+}
+
+.toggle-button {
+  border-radius: 200px;
+  margin-top: 20px;
+  width: 150px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
