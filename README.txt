@@ -39,7 +39,7 @@ To see created users open http://localhost:3000/users
 
 TO DO URGENTLY 
 Fix issues on github and respect format given in slides (User stories, tasks, checkboxes for requirements etc...)
-Fix the sprint 1 excel file according to the work done for sprint 1
+Fix the sprint 1 excel file according to the work done for sprint 1 and format proprely
 Finish sprint 2 excel file and give everyone tasks to work on
 Add details to meeting minutes 1-2-3 according to format online
 
