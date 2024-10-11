@@ -21,6 +21,7 @@ npm i axios
 npm i cors 
 npm i express bcrypt
 npm i nodemon
+npm i mysql
 npm i bootstrap //No need to install if everything else works fine
 
 VS Code Extensions:

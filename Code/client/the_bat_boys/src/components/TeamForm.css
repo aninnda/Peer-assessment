@@ -1,0 +1,32 @@
+form {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgb(145, 138, 138);
+}
+
+button {
+    border-radius: 5px;
+}
+
+.fixed-side {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.team-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    border-radius: 10px; /* Add this line to make it a rounded box */
+    background-color: white; /* Optional: Add a background color if needed */
+    padding: 10px; /* Optional: Add padding if needed */
+    margin: 10px; /* Optional: Add margin if needed */
+}

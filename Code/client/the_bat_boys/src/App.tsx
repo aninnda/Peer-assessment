@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import axios from 'axios';
 import './App.css';
+import TeamForm from './components/TeamForm';
 
 function App() {
 
@@ -21,11 +22,14 @@ function App() {
 
   return (
       <>
+      <div>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/teams" element={<TeamForm />} />
       </Routes>
       </div>
+      </>
   )
 }
 

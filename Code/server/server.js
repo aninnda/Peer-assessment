@@ -1,8 +1,17 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const corsOptions = { origin: 'http://localhost:5173' };
+const corsOptions = { origin: 'http://localhost:5173', credentials: true }; //To allow requests from the client
 const bcrypt = require('bcrypt'); //To hash passwords
+const mysql = require('mysql'); //To connect to the database
+
+
+//Database connection
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: '',
+    password: '',
+});
 
 //Const user to be replaced with database
 const users = [
@@ -50,6 +59,7 @@ app.post('/users/login', async (req, res) => {
     try {
         if(await bcrypt.compare(req.body.password, user.password)) {
             res.send('Success');
+            req.session.user = user;
         } else {
             res.send('Not Allowed');
         }
@@ -57,6 +67,19 @@ app.post('/users/login', async (req, res) => {
         res.status(500).send();
     }
 });
+
+//Check if user is authenticated
+function authenticateToken(req, res, next) {
+    if (req.session.user) {
+        return next();
+    } else {
+        res.redirect('/login');
+    } 
+}
+
+//Protected routes
+
+
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
