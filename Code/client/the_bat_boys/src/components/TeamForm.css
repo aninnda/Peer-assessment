@@ -5,13 +5,14 @@ form {
     background-color: white;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgb(145, 138, 138);
-}
-
-button {
+  }
+  
+  button {
     border-radius: 5px;
-}
-
-.fixed-side {
+    justify-content: center;
+  }
+  
+  .fixed-side {
     position: fixed;
     right: 0;
     top: 0;
@@ -19,19 +20,19 @@ button {
     width: 300px;
     background-color: #f0f0f0;
     padding: 20px;
-}
-
-.team-container {
+  }
+  
+  .team-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     border-radius: 10px;
-    background-color: white; 
+    background-color: white;
     padding: 10px;
-    margin: 10px; 
-}
-
-.modal {
+    margin: 10px;
+  }
+  
+  .modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -45,5 +46,30 @@ button {
   .modal-content {
     padding: 20px;
     border-radius: 8px;
-    width: 300px;
+    width: 400px;
+    max-height: 500px; /* Set a maximum height for the modal */
+    overflow-y: auto; /* Allow scrolling inside the modal */
   }
+  
+  .student-list {
+    display: flex;
+    flex-direction: column;
+    max-height: 300px; /* Adjust height for scrolling */
+    overflow-y: scroll; /* Scroll if the list is too long */
+  }
+  
+  .student-item {
+    display: flex;
+    align-items: center; /* Align checkbox with text */
+    margin-bottom: 5px;
+  }
+  
+  .student-item label {
+    margin-left: 10px; /* Space between checkbox and label */
+  }
+  
+  .assigned-student {
+    text-decoration: line-through;
+    color: grey; /* Styling for students who are already assigned to a team */
+  }
+  
