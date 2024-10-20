@@ -1,5 +1,5 @@
-GET http://localhost:3000/users
-
+GET http://localhost:3000/users/localhost:3000/users/login
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InBhc3N3b3JkIjoiJDJiJDEwJHJybzdoRjFMZUFjaFd5TGV5NEpaemVyS1lQOXMuNjJYbzJsT0xJa0R5aDREbDhUTXIwQmhDIiwicm9sZSI6InN0dWRlbnQifSwiaWF0IjoxNzI4NjEyNDQxfQ.x0RZ9xq7qQtH1kHRln1WvTBXiK__JwVI8WsoTCIb7bw
 ###
 
 POST http://localhost:3000/users
