@@ -1,132 +1,154 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Navbar from "./Navbar";
 import "./TeamForm.css";
 
 interface FormData {
-    teamName: string;
-    selectedStudents: string[];
+  teamName: string;
+  selectedStudents: string[];
 }
 
-const students = ["Student 1", "Student 2", "Student 3"];
+const students = [
+  "Student 1", "Student 2", "Student 3", "Student 4", "Student 5", "Student 6", 
+  "Student 7", "Student 8", "Student 9", "Student 10", "Student 11", "Student 12", 
+  "Student 13", "Student 14", "Student 15", "Student 16", "Student 17", "Student 18", 
+  "Student 19", "Student 20", "Student 21", "Student 22", "Student 23", "Student 24", 
+  "Student 25", "Student 26", "Student 27", "Student 28", "Student 29", "Student 30", 
+  "Student 31", "Student 32", "Student 33", "Student 34", "Student 35", "Student 36", 
+  "Student 37", "Student 38", "Student 39", "Student 40", "Student 41", "Student 42", 
+  "Student 43", "Student 44", "Student 45", "Student 46", "Student 47", "Student 48", 
+  "Student 49", "Student 50"
+];
 
 const TeamForm: React.FC = () => {
-    const [formData, setFormData] = useState<FormData>({ teamName: "", selectedStudents: [] });
-    const [teams, setTeams] = useState<FormData[]>([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [step, setStep] = useState(1); // Step 1: Team Name, Step 2: Select Students
+  const [formData, setFormData] = useState<FormData>({ teamName: "", selectedStudents: [] });
+  const [teams, setTeams] = useState<FormData[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [step, setStep] = useState(1); // Step 1: Team Name, Step 2: Select Students
 
-    // Open or close the modal
-    const toggleModal = () => {
-      setIsModalOpen(!isModalOpen);
-      setStep(1);
-      setFormData({ teamName: "", selectedStudents: [] });
+  // Track students already assigned to teams
+  const assignedStudents = teams.flatMap((team) => team.selectedStudents);
+
+  // Open or close the modal
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+    setStep(1);
+    setFormData({ teamName: "", selectedStudents: [] });
+  };
+
+  // Handle input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Handle student checkbox changes
+  const handleStudentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      selectedStudents: checked
+        ? [...prevData.selectedStudents, value]
+        : prevData.selectedStudents.filter((student) => student !== value),
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setTeams([...teams, formData]);
+    setFormData({ teamName: "", selectedStudents: [] }); // Reset form data
+    toggleModal(); // Close modal
+  };
+
+  // Go to the next step
+  const nextStep = () => {
+    if (step === 1 && formData.teamName) {
+      setStep(2);
     }
+  };
 
-    // Handle input changes
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const prevStep = () => {
+    if (step === 2) {
+      setStep(1);
+    }
+  };
 
-    // Handle student checkbox changes
-    const handleStudentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value, checked } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            selectedStudents: checked
-                ? [...prevData.selectedStudents, value]
-                : prevData.selectedStudents.filter(student => student !== value)
-        }));
-    };
+  return (
+    <div>
+      <Navbar />
 
-    // Handle form submission
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setTeams([...teams, formData]);
-        setFormData({ teamName: "", selectedStudents: [] }); // Reset form data
-        toggleModal(); // Close modal
-    };
+      <button onClick={toggleModal}>Create New Team</button>
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <form onSubmit={handleSubmit}>
+              {step === 1 && (
+                <div>
+                  <label>Team Name:</label><br />
+                  <input
+                    type="text"
+                    name="teamName"
+                    value={formData.teamName}
+                    onChange={handleChange}
+                    required
+                  />
+                  <br />
+                  <button type="button" onClick={nextStep} disabled={!formData.teamName}>
+                    Next
+                  </button>
+                </div>
+              )}
 
-    // Go to the next step
-    const nextStep = () => {
-        if (step === 1 && formData.teamName) {
-          setStep(2);  
-        }
-    };
-
-    const prevStep = () => {
-        if (step === 2) {
-          setStep(1);  
-        }
-      };
-
-    return (
-      <div>
-          <Navbar />
-          
-          <button onClick={toggleModal}>Create New Team</button>
-          {isModalOpen && (
-              <div className="modal">
-                  <div className="modal-content">
-
-                      <form onSubmit={handleSubmit}>
-                          {step === 1 && (
-                              <div>
-                                  <label>Team Name:</label><br />
-                                  <input
-                                      type="text"
-                                      name="teamName"
-                                      value={formData.teamName}
-                                      onChange={handleChange}
-                                      required
-                                  />
-                                  <br />
-                                  <button type="button" onClick={nextStep} disabled={!formData.teamName}>
-                                      Next
-                                  </button>
-                              </div>
-                          )}
-
-                          {/* Step 2: Student list with checkboxes */}
-                          {step === 2 && (
-                              <div>
-                                  <label>Select Students:</label><br />
-                                  {students.map((student, index) => (
-                                      <div key={index}>
-                                          <input
-                                              type="checkbox"
-                                              id={student}
-                                              value={student}
-                                              checked={formData.selectedStudents.includes(student)}
-                                              onChange={handleStudentChange}
-                                          />
-                                          <label htmlFor={student}>{student}</label>
-                                      </div>
-                                  ))}
-                                  <br />
-                                  <button type="button" onClick={prevStep}>Back</button>
-                                  <button type="submit">Create Team</button>
-                              </div>
-                          )}
-                      </form>
+              {/* Step 2: Student list with checkboxes */}
+              {step === 2 && (
+                <div>
+                  <label>Select Students:</label><br />
+                  <div className="student-list">
+                    {students.map((student, index) => (
+                      <div className="student-item" key={index}>
+                        <input
+                          type="checkbox"
+                          id={student}
+                          value={student}
+                          checked={formData.selectedStudents.includes(student)}
+                          onChange={handleStudentChange}
+                          disabled={assignedStudents.includes(student)} // Disable checkbox if student is already assigned
+                        />
+                        <label
+                          htmlFor={student}
+                          className={assignedStudents.includes(student) ? "assigned-student" : ""}
+                        >
+                          {student}
+                        </label>
+                      </div>
+                    ))}
                   </div>
-              </div>
-          )}
-
-          {/* Dynamically show the created teams */}
-          <div className="team-list">
-              <h2>Teams</h2>
-              {teams.map((team, index) => (
-                  <div className="team-container" key={index}>
-                      <h3>{team.teamName}</h3>
-                      <ul>
-                          {team.selectedStudents.map((student, idx) => (
-                              <li key={idx}>{student}</li>
-                          ))}
-                      </ul>
-                  </div>
-              ))}
+                  <br />
+                  <button type="button" onClick={prevStep}>Back</button>
+                  <button type="submit" disabled={formData.selectedStudents.length === 0}>
+                    Create Team
+                  </button>
+                </div>
+              )}
+            </form>
           </div>
+        </div>
+      )}
+
+      {/* Dynamically show the created teams */}
+      <div className="team-list">
+        <h2>Teams</h2>
+        {teams.map((team, index) => (
+          <div className="team-container" key={index}>
+            <h3>{team.teamName}</h3>
+            <ul>
+              {team.selectedStudents.map((student, idx) => (
+                <li key={idx}>{student}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
+    </div>
   );
 };
 

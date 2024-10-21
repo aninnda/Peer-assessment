@@ -10,18 +10,6 @@ import TBD from './components/TBD';
 
 function App() {
 
-  const [array, setArray] = useState([]);
-
-  const fetchAPI = async () => {
-    const response = await axios.get('http://localhost:3000/api');
-    setArray(response.data.fruits);
-    console.log(response.data.fruits);
-  }
-
-  useEffect(() => {
-    fetchAPI();
-  }, []);
-
   return (
       <>
       <div>
