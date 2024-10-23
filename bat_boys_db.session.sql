@@ -1,1 +1,0 @@
-CREATE Table bat_boys_db.testingtables(id int, name varchar(50))
