@@ -14,9 +14,12 @@ require('dotenv').config(); //Tokens secret key
 
 //Database connection
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: '',
-    password: '',
+    server: "localhost",
+    port: 3306,
+    driver: "MySQL",
+    name: "bat_boys_db",
+    database: "bat_boys_db",
+    username: "root"
 });
 
 //Const user to be replaced with database
