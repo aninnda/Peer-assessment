@@ -18,3 +18,6 @@ React + Typescript for front end
 Python for backend
 MySQL for database.
 Started working on Website
+
+Duration
+4h
