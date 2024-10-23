@@ -1,9 +1,15 @@
 const express = require('express');
 const app = express();
+
 const cors = require('cors');
 const corsOptions = { origin: 'http://localhost:5173', credentials: true }; //To allow requests from the client
+
 const bcrypt = require('bcrypt'); //To hash passwords
+
 const mysql = require('mysql'); //To connect to the database
+
+const jwt = require('jsonwebtoken'); //To create auth
+require('dotenv').config(); //Tokens secret key
 
 
 //Database connection
@@ -21,8 +27,11 @@ const users = [
 app.use(express.json());
 app.use(cors(corsOptions));
 
-app.get('/api', (req, res) => {
-    
+//
+//For now just testing
+//
+app.get('/ratings', authenticateToken, (req, res) => {
+    req.json(users.filter(user => user.username === req.user.name));
     res.json();
 
 });
@@ -58,8 +67,10 @@ app.post('/users/login', async (req, res) => {
     }
     try {
         if(await bcrypt.compare(req.body.password, user.password)) {
+
+            const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET);
             res.send('Success');
-            req.session.user = user;
+
         } else {
             res.send('Not Allowed');
         }
@@ -70,11 +81,19 @@ app.post('/users/login', async (req, res) => {
 
 //Check if user is authenticated
 function authenticateToken(req, res, next) {
-    if (req.session.user) {
-        return next();
-    } else {
-        res.redirect('/login');
-    } 
+
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) {
+        return res.sendStatus(401);
+    }
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) {
+            return res.sendStatus(403);
+        }
+        req.user = user;
+        next();
+    });
 }
 
 //Protected routes
