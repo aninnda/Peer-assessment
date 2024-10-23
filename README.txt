@@ -16,7 +16,7 @@ https://liveconcordia-my.sharepoint.com/:x:/g/personal/an_datta_live_concordia_c
 
 Dependencies:
 To be installed both in cd client/the_bat_boys and cd server
-npm i express axios cors nodemon bcrypt mysql jsonwebtoken dotenv
+npm i express axios cors nodemon bcrypt mysql jsonwebtoken dotenv react-router-dom
 
 express //Nodejs framework
 axios //
@@ -26,6 +26,7 @@ nodemon //Refresh server
 mysql //Database
 jsonwebtoken //Login authorisation
 dotenv //Token for authorisation
+react-router-dom //
 
 VS Code Extensions:
 REST client
