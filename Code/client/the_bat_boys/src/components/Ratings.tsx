@@ -43,7 +43,7 @@ const Ratings: React.FC = () => {
     return (
         <div>
             <Navbar />
-            <div className="container">
+            <div className="container_ratings">
                 <h1>Student Ratings</h1>
                 {selectedStudent ? (
                     <div className="rating-box">

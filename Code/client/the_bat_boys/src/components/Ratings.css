@@ -9,7 +9,7 @@ body {
     background: linear-gradient(to right, #4facfe, #00f2fe);
 }
 
-.container {
+.container_ratings {
     margin-top: 80px; /* To lower the Student Ratings title */
     background-color: white;
     padding: 20px;

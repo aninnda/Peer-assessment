@@ -49,13 +49,14 @@ const Login = () => {
           body: JSON.stringify({ userId, password, role }),
       });
 
-      const result = await response.text();
-      alert(result);
+      const result = await response.json();
+      console.log(result);
 
-      if (result === 'Success') {
+      if (result.message === 'Success') {
         setSuccess('true');
       } else {
         console.log('Invalid username, password or role');
+        alert('Invalid username, password or role');
       }
     };
 
