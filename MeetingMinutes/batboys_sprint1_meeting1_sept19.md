@@ -3,7 +3,7 @@
 ### Date
 - 2024-09-19
 
-### Location/Plateform
+### Location/Platform
 - Discord 
 
 ### Duration 
