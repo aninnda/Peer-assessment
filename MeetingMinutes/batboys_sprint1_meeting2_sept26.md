@@ -30,8 +30,8 @@
 - Decided who is going to work on what part (CSS, teams creation, etc.).
 - framework and databases to use for the peer review project:
 
-    React + Typescript for front end
-    Python for backend
+    React + Typescript for front end, 
+    Python for backend and
     MySQL for database.
 
 - Started working on Website (setting up the login form).
