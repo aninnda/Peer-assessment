@@ -1,4 +1,4 @@
-## Project organisation
+## Project organization
 
 ### Date
 - 2024-09-19
