@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import "./TeamForm.css";
 
@@ -24,6 +24,27 @@ const TeamForm: React.FC = () => {
   const [teams, setTeams] = useState<FormData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [step, setStep] = useState(1); // Step 1: Team Name, Step 2: Select Students
+  const [role, setRole] = useState<string | null>(null);
+
+
+  //To change to JWT when implemented
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/users");
+        const data = await response.json();
+        
+        if (data && data.role) {
+          setRole(data.role);
+        } else {
+          console.error("Invalid role");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchRole();
+  }, []);
 
   // Track students already assigned to teams
   const assignedStudents = teams.flatMap((team) => team.selectedStudents);
@@ -71,6 +92,15 @@ const TeamForm: React.FC = () => {
       setStep(1);
     }
   };
+
+
+  if (role === "student") {
+    return 
+    <div>
+      <Navbar />
+      You are not authorized to view this page.
+    </div>;
+  }
 
   return (
     <div>

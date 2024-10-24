@@ -26,4 +26,4 @@
 - Talked about how the wrap up of sprint 1 could be handled. Designed the last few task needed to start sprint 2. 
 - Discussed how the Sprint tasks could be split between team members and accorded and how the database could be implemented.
 - Assigned Aninnda, Dylan and Daniel to the tasks since most of them were somewhat already started, with Samy as the reviewer to make sure everything works fine.Karim and Aymen were tasked with multiple task to help with the process of the sprint 2, like fixing github issues, reformating the meeting minutes to respect the given format.
-- Decided to not use python because of time constraints. Not everyone had the time to learn it so we decided that we will use react-typescript-javascript-node-express-mySQL for everything because everyone is familiar with most of them and they have many things in common. 
+- Decided to not use python because of compatibility with other languages used. Use of React-JavaScript/Typescript-NodeJs-Express-MySQL seemed to work better with a backend using JavaScript.
