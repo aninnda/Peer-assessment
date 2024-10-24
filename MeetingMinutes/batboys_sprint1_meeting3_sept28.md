@@ -1,7 +1,7 @@
 ## Coding Website 
 
 ### Date
-2024-09-28
+- 2024-09-28
 
 ### Location/Platform
 - Discord 
