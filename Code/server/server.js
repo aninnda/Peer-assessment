@@ -29,7 +29,7 @@ connection.connect((err) => {
         return;
     }
     console.log('Connected to the database');
-};
+});
 
 //Const user to be replaced with database
 const users = [];
