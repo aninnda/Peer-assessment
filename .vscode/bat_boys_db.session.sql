@@ -23,3 +23,7 @@ CREATE TABLE bat_boys_db.ratings (
 INSERT INTO bat_boys_db.ratings (id, name, team, conceptualContribution, practicalContribution, workEthic) VALUES
 (1, 'Dylan Moos', 'bat boys', 3, 4, 5),
 (2, 'Samy Mezimez', 'bat boys', 4, 3, 5);
+
+ALTER TABLE bat_boys_db.ratings
+ADD COLUMN cooperationRating INT;
+
