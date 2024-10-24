@@ -23,5 +23,5 @@
 ### Discussion Points
 - Discussed again on each team member's role. Both Karim, Aymen and Daniel are purely going to focus on CSS and how to make the website look better and more appealing. Dylan, Samy and Aninnda are going to finish setting up the database using sql and assure the functionnality of 
 the website is ready for the demo on the 24th. Daniel, Karim and Aymen are also going to add/remove/fix the task breakdown on the excel file and make relevant changes to meet the rubric requirements. 
-
+- Worked on database, authorization with JWT and Review page (Aninnda, Dylan & Samy).
 
