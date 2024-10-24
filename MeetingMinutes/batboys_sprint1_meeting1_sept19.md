@@ -1,13 +1,13 @@
 ## Project organisation
 
 ### Date
-2024-09-19
+- 2024-09-19
 
 ### Location/Plateform
-Discord 
+- Discord 
 
 ### Duration 
-3h
+- 3h
 
 ### Attendees
 - Samy
