@@ -7,32 +7,22 @@ const corsOptions = { origin: 'http://localhost:5173', credentials: true }; //To
 const bcrypt = require('bcrypt'); //To hash passwords
 
 const mysql = require('mysql'); //To connect to the database
+const { executeQuery } = require('./db.js'); //To execute queries
 
 const jwt = require('jsonwebtoken'); //To create auth
 require('dotenv').config(); //Tokens secret key
 
-
-//Database connection
-const db = mysql.createConnection({
-    server: "localhost",
-    port: 3306,
-    driver: "MySQL",
-    name: "bat_boys_db",
-    database: "bat_boys_db",
-    username: "root"
-});
-
 //Connect to the database
-connection.connect((err) => {
-    if (err) {
-        console.log(err);
-        return;
-    }
-    console.log('Connected to the database');
-};
+// connection.connect((err) => {
+//     if (err) {
+//         console.log(err);
+//         return;
+//     }
+//     console.log('Connected to the database');
+// });
 
 //Const user to be replaced with database
-const users = [];
+const users = []; //Should be in db.js
 
 
 app.use(express.json());
@@ -47,8 +37,14 @@ app.get('/ratings', authenticateToken, (req, res) => {
 
 });
 
-app.get('/users', (req, res) => {
-    res.json(users);
+app.get('/users', async (req, res) => {
+    try {
+        const users = await executeQuery('SELECT * FROM users');
+        res.json(users);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send();
+    }
 });
 
 app.get('/users/login', (req, res) => {
@@ -103,11 +99,6 @@ app.post('/users/login', async (req, res) => {
             res.status(500).send();
         }
     })
-
-
-
-
-
 });
 
 //Check if user is authenticated
@@ -127,7 +118,14 @@ function authenticateToken(req, res, next) {
     });
 }
 
-//Protected routes
+app.post('/users/loginWithToken', authenticateToken, (req, res) => {
+    const user = users.find(user => user.name === req.user.name && user.role === req.user.role);
+    if (user == null) {
+        return res.status(400).send('Cannot find user');
+    }
+    res.send({ message: 'User authenticated', user: user });
+});
+
 
 
 
