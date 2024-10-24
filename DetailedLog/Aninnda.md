@@ -6,11 +6,11 @@
 - Worked on the Sprint excel file 
 - Helped organizing the tasks separation
 - Worked on the third meeting minute description
-  Total time spent: approximately 9 hours
+- Total time spent: approximately 9 hours
 
 ## Sprint 2
 - Helped assigning team roles
 - Set up meetings to go over the project
 - Helped organize and discuss backend development
 - Created the ratings page that allows the student to rate their peers
-  Total time spent: approximately 7 hours
+- Total time spent: approximately 7 hours
