@@ -1,27 +1,30 @@
+//Backend
 const express = require('express');
 const app = express();
 
+//Communication with frontend
 const cors = require('cors');
 const corsOptions = { origin: 'http://localhost:5173', credentials: true }; //To allow requests from the client
 
-const bcrypt = require('bcrypt'); //To hash passwords
-
+//Database
 const mysql = require('mysql'); //To connect to the database
-const { executeQuery } = require('./db.js'); //To execute queries
+//Remove when db.js + auth.js is setup
+//const { executeQuery } = require('./db.js'); //To execute queries
 
+//Authorization and authentication
+//const auth = require('./auth.js');
+const verifyToken = require('./authMiddleware');
 const jwt = require('jsonwebtoken'); //To create auth
 require('dotenv').config(); //Tokens secret key
+const bcrypt = require('bcrypt'); //To hash passwords
 
+
+app.use(express.json());
+app.use(cors(corsOptions));
+
+
+//Possibly to remove????!!!
 //Connect to the database
-<<<<<<< HEAD
-connection.connect((err) => {
-    if (err) {
-        console.log(err);
-        return;
-    }
-    console.log('Connected to the database');
-});
-=======
 // connection.connect((err) => {
 //     if (err) {
 //         console.log(err);
@@ -29,32 +32,23 @@ connection.connect((err) => {
 //     }
 //     console.log('Connected to the database');
 // });
->>>>>>> 0280ccb5e602c239a447a9cabf48ed3030c2cef9
+
 
 //Const user to be replaced with database
 const users = []; //Should be in db.js
 
 
-app.use(express.json());
-app.use(cors(corsOptions));
-
 //
 //For now just testing
 //
-app.get('/ratings', authenticateToken, (req, res) => {
-    req.json(users.filter(user => user.username === req.user.name));
-    res.json();
+// app.get('/ratings', verifyToken, (req, res) => {
+//     req.json(users.filter(user => user.username === req.user.name));
+//     res.json();
 
-});
+// });
 
-app.get('/users', async (req, res) => {
-    try {
-        const users = await executeQuery('SELECT * FROM users');
-        res.json(users);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send();
-    }
+app.get('/users', (req, res) => {
+    res.json(users);
 });
 
 app.get('/users/login', (req, res) => {
@@ -77,14 +71,15 @@ app.post('/users', async (req, res) => {
 
 
 //Login
-app.post('/users/login', async (req, res) => {
+app.post('/users/loginTEST', async (req, res) => {
     const user = users.find(user => user.name === req.body.name && user.role === req.body.role); ;
     if (user == null) {
         return res.status(400).send('Cannot find user');
     }
 
-    const sql = 'SELECT * FROM users WHERE name = ? AND role = ?';
-    connection.query(sql, [req.body.name, req.body.role], async (err, result) => {
+    //const sql = 'SELECT * FROM users WHERE name = ? AND role = ?';
+    //To remove when auth.js is setup
+    //connection.query(sql, [req.body.name, req.body.role], async (err, result) => {
         
         //If there is an error
         if (err) {
@@ -97,7 +92,7 @@ app.post('/users/login', async (req, res) => {
             return res.status(400).send('Cannot find user');
         }
 
-        const user = result[0];
+        //const user = result[0];
         try {
             if(await bcrypt.compare(req.body.password, user.password)) {
                 const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET);
@@ -108,27 +103,29 @@ app.post('/users/login', async (req, res) => {
         } catch {
             res.status(500).send();
         }
-    })
+    //})
 });
 
-//Check if user is authenticated
-function authenticateToken(req, res, next) {
-
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (token == null) {
-        return res.sendStatus(401);
+app.post('/users/login', async (req, res) => {
+    const user = users.find(user => user.name === req.body.name && user.role === req.body.role);
+    if (user == null) {
+        return res.status(400).send('Cannot find user');
     }
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) {
-            return res.sendStatus(403);
-        }
-        req.user = user;
-        next();
-    });
-}
 
-app.post('/users/loginWithToken', authenticateToken, (req, res) => {
+    try {
+        if (await bcrypt.compare(req.body.password, user.password)) {
+            res.send({ message: 'Success', user: { name: user.name, role: user.role } });
+        } else {
+            res.send('Not Allowed');
+        }
+    } catch {
+        res.status(500).send();
+    }
+});
+
+
+
+app.post('/users/loginWithToken', verifyToken, (req, res) => {
     const user = users.find(user => user.name === req.user.name && user.role === req.user.role);
     if (user == null) {
         return res.status(400).send('Cannot find user');

@@ -6,7 +6,6 @@ CREATE TABLE bat_boys_db.user (
     name VARCHAR(50) NOT NULL, 
     team VARCHAR(50) NOT NULL);
 
-<<<<<<< HEAD
 INSERT INTO bat_boys_db.user (id, username, password, role, name, team) VALUES
 (1, 'dylanM', 'Dylan123', 'Student', 'Dylan Moos', 'bat boys'),
 (2, 'cemi', '123', 'Student', 'Samy Mezimez', 'bat boys'),
