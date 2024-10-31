@@ -24,7 +24,7 @@ https://liveconcordia-my.sharepoint.com/:x:/g/personal/an_datta_live_concordia_c
 
 Dependencies:
 To be installed in both directory: Code/client/the_bat_boys + Code/server
-npm i express axios cors nodemon bcrypt mysql jsonwebtoken dotenv react-router-dom
+npm i express axios cors nodemon bcrypt mysql jsonwebtoken dotenv react-router-dom cookie-parser
 
 express //Nodejs framework
 axios //
