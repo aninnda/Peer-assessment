@@ -1,5 +1,5 @@
 ## Sprint 1
-- Initialized and organized the repo
+- Initialized and organized the repo (0h30)
 - Created all issues on GitHub
 - Overlooked the work done by all the team
 - Worked on the Sprint excel file
@@ -21,3 +21,4 @@
 - Separated tasks for the team
 - Ensured work was done by team members (With some exceptions)
 - Helped Aninnda and Dylan on their task for setting up database and teamform/ratings page
+- Worked with Dylan to fix error in the TeamForm/Ratings connection to database

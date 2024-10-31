@@ -7,7 +7,6 @@ const cors = require('cors');
 const corsOptions = { origin: 'http://localhost:5173', credentials: true }; //To allow requests from the client
 
 //Database
-const mysql = require('mysql'); //To connect to the database
 const connection = require('./db.js');
 //Remove when db.js + auth.js is setup
 //const { executeQuery } = require('./db.js'); //To execute queries
@@ -112,17 +111,17 @@ app.post('/users/loginTTTT', async (req, res) => {
     //})
 });
 
-app.post('/users/login', async (req, res) => {
+app.post('/users/login', (req, res) => {
     const { name, password, role } = req.body;
 
-    try {
-        // Query the database for the user
-        const [rows] = await pool.query(
-            'SELECT * FROM users WHERE username = ? AND role = ?',
-            [name, role]
-        );
+    const query = 'SELECT * FROM users WHERE username = ? AND role = ?';
+    connection.query(query, [name, role], (error, results) => {
+        if (error) {
+            console.error('Error querying the database:', error);
+            return res.status(500).send('Internal server error');
+        }
 
-        const user = rows[0]; // Get the first user returned by the query
+        const user = results[0]; // Get the first user returned by the query
 
         if (!user) {
             return res.status(400).send('Cannot find user');
@@ -134,10 +133,7 @@ app.post('/users/login', async (req, res) => {
         } else {
             return res.status(400).send('Incorrect password');
         }
-    } catch (error) {
-        console.error('Error querying the database:', error);
-        return res.status(500).send('Internal server error');
-    }
+    });
 });
 
 
