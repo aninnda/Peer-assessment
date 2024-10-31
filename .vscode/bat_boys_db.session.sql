@@ -1,15 +1,19 @@
-CREATE TABLE bat_boys_db.user (
+CREATE DATABASE if NOT EXISTS bat_boys_db;
+
+USE bat_boys_db;
+
+CREATE TABLE if NOT EXISTS users (
     id INT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL, 
-    password VARCHAR(50) NOT NULL, 
-    role VARCHAR(50) NOT NULL, 
+    username VARCHAR(50) NOT NULL,
     name VARCHAR(50) NOT NULL, 
+    password VARCHAR(255) NOT NULL, 
+    role ENUM('student', 'instructor') NOT NULL, 
     team VARCHAR(50) NOT NULL);
 
-INSERT INTO bat_boys_db.user (id, username, password, role, name, team) VALUES
-(1, 'dylanM', 'Dylan123', 'Student', 'Dylan Moos', 'bat boys'),
-(2, 'cemi', '123', 'Student', 'Samy Mezimez', 'bat boys'),
-(3, 'aninnda', 'Aninnda123', 'Instructor', 'Aninnda Kumar Datta', 'Instructors');
+INSERT INTO bat_boys_db.users (username, password, role, name, team) VALUES
+('dylan', 'Dylan123', 'Student', 'Dylan Moos', 'bat boys'),
+('samy', 'Samy123', 'Student', 'Samy Mezimez', 'bat boys'),
+('aninnda', 'Aninnda123', 'Instructor', 'Aninnda Kumar Datta', 'Instructors');
 
 CREATE TABLE bat_boys_db.ratings (
     id INT PRIMARY KEY,
@@ -17,12 +21,11 @@ CREATE TABLE bat_boys_db.ratings (
     team VARCHAR(50) NOT NULL,
     conceptualContribution INT,
     practicalContribution INT,
-    workEthic INT);
+    workEthic INT,
+    cooperationRating INT);
 
-INSERT INTO bat_boys_db.ratings (id, name, team, conceptualContribution, practicalContribution, workEthic) VALUES
-(1, 'Dylan Moos', 'bat boys', 3, 4, 5),
-(2, 'Samy Mezimez', 'bat boys', 4, 3, 5);
+INSERT INTO bat_boys_db.ratings (name, team, conceptualContribution, practicalContribution, workEthic, cooperationRating) VALUES
+('Dylan Moos', 'bat boys', 3, 4, 5, 5),
+('Samy Mezimez', 'bat boys', 4, 3, 5, 5);
 
-ALTER TABLE bat_boys_db.ratings
-ADD COLUMN cooperationRating INT;
 

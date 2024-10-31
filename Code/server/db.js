@@ -1,24 +1,31 @@
-const mysql = require("mysql2/promise");
-
+const mysql = require("mysql2");
+const fs = require("fs");
+const path = require("path");
 
 //Database connection
-const pool = mysql.createPool({
-    server: "localhost",
-    port: 3306,
-    driver: "MySQL",
-    name: "bat_boys_db",
+const connection = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "Samy1445",
     database: "bat_boys_db",
-    username: "root"
+    
 });
 
-export const executeQuery = async (query, params) => {
-    try {
-        const [result] = await createPool.execute(query, params);
-        return result;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-};
+const sqlFilePath = path.join(__dirname, '../db/bat_boys_db.session.sql');
 
-module.exports = { executeQuery };
+try {
+    const sql = fs.readFileSync(sqlFilePath, "utf8");
+    const commands = sqlContent.split(";").filter(cmd => cmd.trim());
+
+    commands.forEach((command) => {
+        connection.query(command, (err, result) => {
+            if (err) throw err;
+            console.log("Tables created");
+        });
+    });
+} catch (err) {
+    console.log(err);
+}
+
+
+module.exports = connection;

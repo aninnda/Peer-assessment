@@ -13,3 +13,11 @@
 - Added login functionality with backend authentication using encryption for passwords to securely store passwords
 - Refactored the code to allow one sumbit function by checking roles instead of one for students and one for instructors
 - Added request.rest file inside server folder to test GET/POST without frontend.
+
+## Sprint 2
+- Setup entirety of database to function using the backend
+- Added database to Teamform to fetch students from database
+- Added database to ratings to fetch/send ratings to/from database
+- Separated tasks for the team
+- Ensured work was done by team members (With some exceptions)
+- Helped Aninnda and Dylan on their task for setting up database and teamform/ratings page

@@ -1,16 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import './Ratings.css';
 
-const students = ['Student 1', 'Student 2', 'Student 3'];
 
 const Ratings: React.FC = () => {
+    const [students, setStudents] = useState<string[]>([]);
     const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
-    const [ratings, setRatings] = useState<any>({
-        'Student 1': { cooperation: 0, conceptual: 0, practical: 0, ethic: 0, comments: '' },
-        'Student 2': { cooperation: 0, conceptual: 0, practical: 0, ethic: 0, comments: '' },
-        'Student 3': { cooperation: 0, conceptual: 0, practical: 0, ethic: 0, comments: '' }
-    });
+    const [ratings, setRatings] = useState<any>({});
+
+    useEffect(() => {
+        const fetchStudents = async () => {
+            try {
+                const response = await fetch("http://localhost:3000/users"); // Adjust the endpoint as necessary
+                const data = await response.json();
+                setStudents(data.map((user: { username: string }) => user.username)); // Assuming users have a 'username' field
+                const initialRatings: { [key: string]: { cooperation: number, conceptual: number, practical: number, ethic: number, comments: string } } = {};
+                data.forEach((user: { username: string }) => {
+                    initialRatings[user.username] = { cooperation: 0, conceptual: 0, practical: 0, ethic: 0, comments: '' };
+                });
+                setRatings(initialRatings); // Initialize ratings for fetched students
+            } catch (error) {
+                console.error("Error fetching students:", error);
+            }
+        };
+
+        fetchStudents();
+    }, []);   
 
     const handleRatingChange = (category: string, value: number) => {
         if (selectedStudent) {

@@ -7,17 +7,6 @@ interface FormData {
   selectedStudents: string[];
 }
 
-const students = [
-  "Student 1", "Student 2", "Student 3", "Student 4", "Student 5", "Student 6", 
-  "Student 7", "Student 8", "Student 9", "Student 10", "Student 11", "Student 12", 
-  "Student 13", "Student 14", "Student 15", "Student 16", "Student 17", "Student 18", 
-  "Student 19", "Student 20", "Student 21", "Student 22", "Student 23", "Student 24", 
-  "Student 25", "Student 26", "Student 27", "Student 28", "Student 29", "Student 30", 
-  "Student 31", "Student 32", "Student 33", "Student 34", "Student 35", "Student 36", 
-  "Student 37", "Student 38", "Student 39", "Student 40", "Student 41", "Student 42", 
-  "Student 43", "Student 44", "Student 45", "Student 46", "Student 47", "Student 48", 
-  "Student 49", "Student 50"
-];
 
 const TeamForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({ teamName: "", selectedStudents: [] });
@@ -25,26 +14,57 @@ const TeamForm: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [step, setStep] = useState(1); // Step 1: Team Name, Step 2: Select Students
   const [role, setRole] = useState<string | null>(null);
+  const [students, setStudents] = useState<string[]>([]);
 
 
   //To change to JWT when implemented
+  // useEffect(() => {
+  //   const fetchRole = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:3000/users");
+  //       const data = await response.json();
+        
+  //       if (data && data.role) {
+  //         setRole(data.role);
+  //       } else {
+  //         console.error("Invalid role");
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   fetchRole();
+  // }, []);
+
   useEffect(() => {
-    const fetchRole = async () => {
+    const fetchStudents = async () => {
       try {
         const response = await fetch("http://localhost:3000/users");
         const data = await response.json();
         
-        if (data && data.role) {
-          setRole(data.role);
-        } else {
-          console.error("Invalid role");
-        }
+        // Assuming the data is an array of usernames
+        setStudents(data.map((user: { username: string }) => user.username)); 
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching students:", error);
       }
     };
-    fetchRole();
+    fetchStudents();
   }, []);
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/teams');
+            const data = await response.json();
+            console.log('Fetched teams:', data);
+            setTeams(data);  // Assuming the response is an array of teams
+        } catch (error) {
+            console.error('Error fetching teams:', error);
+        }
+    };
+
+    fetchTeams();
+}, []);
 
   // Track students already assigned to teams
   const assignedStudents = teams.flatMap((team) => team.selectedStudents);
@@ -73,8 +93,21 @@ const TeamForm: React.FC = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const teamToInsert = { teamName: formData.teamName, selectedStudents: formData.selectedStudents };
+
+    try {
+      await fetch("http://localhost:3000/teams", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(teamToInsert),
+      });
+    } catch (error) {
+      console.error("Error inserting team:", error);
+    }
+
     setTeams([...teams, formData]);
     setFormData({ teamName: "", selectedStudents: [] }); // Reset form data
     toggleModal(); // Close modal

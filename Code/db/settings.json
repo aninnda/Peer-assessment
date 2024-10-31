@@ -1,0 +1,16 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "host": "localhost",
+            "port": 3306,
+            "name": "bat_boys_db",
+            "database": "bat_boys_db",
+            "user": "root"
+        }
+    ]
+}
