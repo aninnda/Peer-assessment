@@ -2,6 +2,11 @@
 const express = require('express');
 const app = express();
 
+
+// Cookies
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
 //Communication with frontend
 const cors = require('cors');
 const corsOptions = { origin: 'http://localhost:5173', credentials: true }; //To allow requests from the client
@@ -126,8 +131,12 @@ app.post('/users/login', (req, res) => {
             return res.status(400).send('Cannot find user');
         }
 
+        const token = jwt.sign({ name: user.name, role: user.role }, process.env.ACCESS_TOKEN_SECRET);
         // Check if the password matches (you might want to use bcrypt for hashing in production)
         if (password === user.password) {
+            res.cookie('authToken', token, {
+                httpOnly: true, // Only accessible by the server
+            });
             res.send({ message: 'Success', user: { name: user.name, role: user.role } });
         } else {
             return res.status(400).send('Incorrect password');
@@ -182,6 +191,16 @@ app.post('/teams', async (req, res) => {
     });
 });
 
+app.get('/teams', verifyToken, (req, res) => {
+    const query = 'SELECT * FROM teams';
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send();
+        }
+        res.json(results);
+    });
+});
 
 
 

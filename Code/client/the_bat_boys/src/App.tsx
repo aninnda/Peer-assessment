@@ -8,6 +8,9 @@ import TeamForm from './components/TeamForm';
 import Ratings from './components/Ratings';
 import TBD from './components/TBD';
 
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = 'http://localhost:3000';
+
 function App() {
 
   return (

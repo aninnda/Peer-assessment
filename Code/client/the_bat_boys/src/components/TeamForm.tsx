@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import "./TeamForm.css";
+import axios from "axios";
 
 interface FormData {
   teamName: string;
@@ -15,6 +16,8 @@ const TeamForm: React.FC = () => {
   const [step, setStep] = useState(1); // Step 1: Team Name, Step 2: Select Students
   const [role, setRole] = useState<string | null>(null);
   const [students, setStudents] = useState<string[]>([]);
+  const [teamName, setTeamName] = useState('');
+  const [selectedStudents, setSelectedStudents] = useState([]);
 
 
   //To change to JWT when implemented
@@ -35,6 +38,7 @@ const TeamForm: React.FC = () => {
   //   };
   //   fetchRole();
   // }, []);
+  
 
 
   
@@ -56,10 +60,8 @@ const TeamForm: React.FC = () => {
   useEffect(() => {
     const fetchTeams = async () => {
         try {
-            const response = await fetch('http://localhost:3000/teams');
-            const data = await response.json();
-            console.log('Fetched teams:', data);
-            setTeams(data);  // Assuming the response is an array of teams
+            const response = await axios.get('http://localhost:3000/teams', { withCredentials: true });
+            setTeams(response.data);
         } catch (error) {
             console.error('Error fetching teams:', error);
         }
@@ -67,6 +69,23 @@ const TeamForm: React.FC = () => {
 
     fetchTeams();
 }, []);
+
+const handleCreateTeam = async () => {
+  try {
+      await axios.post('http://localhost:3000/teams', {
+          teamName,
+          selectedStudents,
+      }, { withCredentials: true });
+
+      // Refresh teams after creating a new team
+      const response = await axios.get('http://localhost:3000/teams', { withCredentials: true });
+      setTeams(response.data);
+      setTeamName(''); // Clear input field
+      setSelectedStudents([]); // Clear selected students
+  } catch (error) {
+      console.error('Error creating team:', error);
+  }
+};
 
   // Track students already assigned to teams
   const assignedStudents = teams.flatMap((team) => team.selectedStudents);

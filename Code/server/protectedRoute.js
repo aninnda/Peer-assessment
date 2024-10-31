@@ -4,16 +4,16 @@ const verifyToken = require('./authMiddleware');
 const connection = require('./db');
 
 //Protected route
-router.get('/teams', verifyToken, (req, res) => {
-    const query = 'SELECT * FROM teams';
-    connection.query(query, (err, results) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).send();
-        }
-        res.json(results);
-    });
-});
+// router.get('/teams', verifyToken, (req, res) => {
+//     const query = 'SELECT * FROM teams';
+//     connection.query(query, (err, results) => {
+//         if (err) {
+//             console.log(err);
+//             return res.status(500).send();
+//         }
+//         res.json(results);
+//     });
+// });
 
 router.get('/ratings', verifyToken, (req, res) => {
     const query = 'SELECT * FROM ratings';
