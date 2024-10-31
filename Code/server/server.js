@@ -18,7 +18,6 @@ const jwt = require('jsonwebtoken'); //To create auth
 require('dotenv').config(); //Tokens secret key
 const bcrypt = require('bcrypt'); //To hash passwords
 
-
 app.use(express.json());
 app.use(cors(corsOptions));
 
@@ -165,6 +164,24 @@ app.post('/users/loginWithToken', verifyToken, (req, res) => {
     }
     res.send({ message: 'User authenticated', user: user });
 });
+
+
+// Create teams
+app.post('/teams', async (req, res) => {
+    const { teamName, selectedStudents } = req.body;
+
+    const query = 'INSERT INTO teams (team_name, students) VALUES (?, ?)';
+    const studentsJson = JSON.stringify(selectedStudents); 
+
+    connection.query(query, [teamName, studentsJson], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send();
+        }
+        res.status(201).json({ message: 'Team created', teamId: result.insertId });
+    });
+});
+
 
 
 
