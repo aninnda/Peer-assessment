@@ -6,12 +6,11 @@
                 "enableSsl": "Disabled"
             },
             "previewLimit": 50,
-            "server": "localhost",
+            "host": "localhost",
             "port": 3306,
-            "driver": "MySQL",
             "name": "bat_boys_db",
             "database": "bat_boys_db",
-            "username": "root"
+            "user": "root"
         }
     ]
 }

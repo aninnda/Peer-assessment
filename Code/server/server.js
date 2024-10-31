@@ -7,7 +7,7 @@ const cors = require('cors');
 const corsOptions = { origin: 'http://localhost:5173', credentials: true }; //To allow requests from the client
 
 //Database
-const mysql = require('mysql'); //To connect to the database
+const connection = require('./db.js');
 //Remove when db.js + auth.js is setup
 //const { executeQuery } = require('./db.js'); //To execute queries
 
@@ -18,25 +18,12 @@ const jwt = require('jsonwebtoken'); //To create auth
 require('dotenv').config(); //Tokens secret key
 const bcrypt = require('bcrypt'); //To hash passwords
 
-
 app.use(express.json());
 app.use(cors(corsOptions));
 
 
-//Possibly to remove????!!!
-//Connect to the database
-// connection.connect((err) => {
-//     if (err) {
-//         console.log(err);
-//         return;
-//     }
-//     console.log('Connected to the database');
-// });
-
-
 //Const user to be replaced with database
 const users = []; //Should be in db.js
-
 
 //
 //For now just testing
@@ -48,15 +35,32 @@ const users = []; //Should be in db.js
 // });
 
 app.get('/users', (req, res) => {
-    res.json(users);
+    connection.query('SELECT * FROM users', (err, results) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send();
+        }
+        res.json(results);
+    });
 });
 
-app.get('/users/login', (req, res) => {
+app.get('/users/loginT', (req, res) => {
     res.json(users);
 });
 
 //Add users (register possibly)
 app.post('/users', async (req, res) => {
+    try {
+        const user = { name: req.body.username, password: req.body.password, role: req.body.role };
+        users.push(user);
+        res.status(201).send();
+    } catch {
+        res.status(500).send();
+    }
+});
+
+//Version with hash
+app.post('/usersttttt', async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         //console.log(salt);
@@ -71,7 +75,7 @@ app.post('/users', async (req, res) => {
 
 
 //Login
-app.post('/users/loginTEST', async (req, res) => {
+app.post('/users/loginTTTT', async (req, res) => {
     const user = users.find(user => user.name === req.body.name && user.role === req.body.role); ;
     if (user == null) {
         return res.status(400).send('Cannot find user');
@@ -95,8 +99,8 @@ app.post('/users/loginTEST', async (req, res) => {
         //const user = result[0];
         try {
             if(await bcrypt.compare(req.body.password, user.password)) {
-                const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET);
-                res.send({ message: 'Success', accessToken: accessToken });
+                //const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET);
+                //res.send({ message: 'Success', accessToken: accessToken });
             } else {
                 res.send('Not Allowed');
             }
@@ -106,8 +110,36 @@ app.post('/users/loginTEST', async (req, res) => {
     //})
 });
 
-app.post('/users/login', async (req, res) => {
-    const user = users.find(user => user.name === req.body.name && user.role === req.body.role);
+app.post('/users/login', (req, res) => {
+    const { name, password, role } = req.body;
+
+    const query = 'SELECT * FROM users WHERE username = ? AND role = ?';
+    connection.query(query, [name, role], (error, results) => {
+        if (error) {
+            console.error('Error querying the database:', error);
+            return res.status(500).send('Internal server error');
+        }
+
+        const user = results[0]; // Get the first user returned by the query
+
+        if (!user) {
+            return res.status(400).send('Cannot find user');
+        }
+
+        // Check if the password matches (you might want to use bcrypt for hashing in production)
+        if (password === user.password) {
+            res.send({ message: 'Success', user: { name: user.name, role: user.role } });
+        } else {
+            return res.status(400).send('Incorrect password');
+        }
+    });
+});
+
+
+
+////Version with hash
+app.post('/users/loginhash', async (req, res) => {
+    const user = users.find(user => user.username === req.body.name && user.role === req.body.role);
     if (user == null) {
         return res.status(400).send('Cannot find user');
     }
@@ -132,6 +164,24 @@ app.post('/users/loginWithToken', verifyToken, (req, res) => {
     }
     res.send({ message: 'User authenticated', user: user });
 });
+
+
+// Create teams
+app.post('/teams', async (req, res) => {
+    const { teamName, selectedStudents } = req.body;
+
+    const query = 'INSERT INTO teams (team_name, students) VALUES (?, ?)';
+    const studentsJson = JSON.stringify(selectedStudents); 
+
+    connection.query(query, [teamName, studentsJson], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send();
+        }
+        res.status(201).json({ message: 'Team created', teamId: result.insertId });
+    });
+});
+
 
 
 

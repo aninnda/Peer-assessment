@@ -14,7 +14,7 @@ const Login = () => {
     const [isStudentLogin, setIsStudentLogin] = useState(true);
         
     // State variables login
-    const [userId, setUserId] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     // State variables for success
@@ -41,24 +41,31 @@ const Login = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      const role = isStudentLogin ? 'student' : 'instructor';  
+      const role = isStudentLogin ? 'student' : 'instructor';
 
-      const response = await fetch('http://localhost:3000/users/login', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId, password, role }),
-      });
+      try {
+          const response = await fetch('http://localhost:3000/users/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: username, password, role }),
+          });
 
-      const result = await response.json();
-      console.log(result);
+          const result = await response.json();
+          console.log(result);
 
-      if (result.message === 'Success') {
-        setSuccess('true');
-      } else {
-        console.log('Invalid username, password or role');
-        alert('Invalid username, password or role');
+          if (response.ok && result.message === 'Success') { // Check if the response is OK
+              setSuccess('true');
+              // Optionally redirect or perform additional actions here
+          } else {
+              console.log('Invalid username, password, or role');
+              alert('Invalid username, password, or role');
+          }
+      } catch (error) {
+          console.error('Error during login:', error);
+          alert('An error occurred during login. Please try again.'); // Handle unexpected errors
       }
     };
+
 
     return (
         <> 
@@ -82,8 +89,8 @@ const Login = () => {
                     type="text"
                     id="userId"
                     placeholder={isStudentLogin ? "Student ID" : "Instructor ID"}
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                   />
                   <input

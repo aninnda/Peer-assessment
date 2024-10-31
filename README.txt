@@ -43,7 +43,8 @@ How to run website:
 Open 2 terminal -->
     1. Code/client/the_bat_boys
     2. Code/server
-On both terminal write "npm run dev"
+On client terminal write "npm run dev"
+On server terminal write "npm start"
 Open http://localhost:5173
 Using request.rest, create users using POST and /users
 Login with newly created users (userId, password, role)
