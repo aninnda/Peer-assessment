@@ -6,7 +6,7 @@ const path = require("path");
 const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "MDEm0815.!2550", //TO CHANGE
+    password: "Samy1445", //TO CHANGE
     database: "bat_boys_db",
     
 });
@@ -26,7 +26,5 @@ try {
 } catch (err) {
     console.log(err);
 }
-
-
 
 module.exports = connection;
