@@ -20,35 +20,25 @@ const TeamForm: React.FC = () => {
   const [selectedStudents, setSelectedStudents] = useState([]);
 
 
-  //To change to JWT when implemented
-  // useEffect(() => {
-  //   const fetchRole = async () => {
-  //     try {
-  //       const response = await fetch("http://localhost:3000/users");
-  //       const data = await response.json();
-        
-  //       if (data && data.role) {
-  //         setRole(data.role);
-  //       } else {
-  //         console.error("Invalid role");
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   fetchRole();
-  // }, []);
+  // Fetch the user's role
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/session", { withCredentials: true });
+        setRole(response.data.role);
+      } catch (error) {
+        console.error("Error fetching role:", error);
+      }
+    };
+    fetchRole();
+  }, []);
   
-
-
-  
+  // Fetch students
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const response = await fetch("http://localhost:3000/users");
         const data = await response.json();
-        
-        // Assuming the data is an array of usernames
         setStudents(data.map((user: { username: string }) => user.username)); 
       } catch (error) {
         console.error("Error fetching students:", error);
@@ -57,6 +47,7 @@ const TeamForm: React.FC = () => {
     fetchStudents();
   }, []);
 
+  // Fetch teams
   useEffect(() => {
     const fetchTeams = async () => {
         try {
@@ -66,22 +57,20 @@ const TeamForm: React.FC = () => {
             console.error('Error fetching teams:', error);
         }
     };
-
     fetchTeams();
 }, []);
 
 const handleCreateTeam = async () => {
   try {
       await axios.post('http://localhost:3000/teams', {
-          teamName,
-          selectedStudents,
+          teamName:formData.teamName,
+          selectedStudents: formData.selectedStudents,
       }, { withCredentials: true });
 
       // Refresh teams after creating a new team
       const response = await axios.get('http://localhost:3000/teams', { withCredentials: true });
       setTeams(response.data);
-      setTeamName(''); // Clear input field
-      setSelectedStudents([]); // Clear selected students
+      setFormData({ teamName: "", selectedStudents: [] });
   } catch (error) {
       console.error('Error creating team:', error);
   }
@@ -116,22 +105,8 @@ const handleCreateTeam = async () => {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const teamToInsert = { teamName: formData.teamName, selectedStudents: formData.selectedStudents };
-
-    try {
-      await fetch("http://localhost:3000/teams", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(teamToInsert),
-      });
-    } catch (error) {
-      console.error("Error inserting team:", error);
-    }
-
-    setTeams([...teams, formData]);
-    setFormData({ teamName: "", selectedStudents: [] }); // Reset form data
-    toggleModal(); // Close modal
+    await handleCreateTeam();
+    toggleModal();
   };
 
   // Go to the next step
@@ -148,18 +123,27 @@ const handleCreateTeam = async () => {
   };
 
 
-  if (role === "student") {
-    return 
+  if (role === null) {
+    return (
     <div>
       <Navbar />
       You are not authorized to view this page.
-    </div>;
+    </div>
+    )
+  }
+
+  if (role !== 'instructor') {
+    return (
+    <div>
+      <Navbar />
+      You are not authorized to view this page.
+    </div>
+    )
   }
 
   return (
     <div>
       <Navbar />
-
       <button onClick={toggleModal}>Create New Team</button>
       {isModalOpen && (
         <div className="modal">
@@ -167,7 +151,7 @@ const handleCreateTeam = async () => {
             <form onSubmit={handleSubmit}>
               {step === 1 && (
                 <div>
-                  <label>Team Name:</label><br />
+                  <label>Team Name:</label>
                   <input
                     type="text"
                     name="teamName"
@@ -175,17 +159,14 @@ const handleCreateTeam = async () => {
                     onChange={handleChange}
                     required
                   />
-                  <br />
                   <button type="button" onClick={nextStep} disabled={!formData.teamName}>
                     Next
                   </button>
                 </div>
               )}
-
-              {/* Step 2: Student list with checkboxes */}
               {step === 2 && (
                 <div>
-                  <label>Select Students:</label><br />
+                  <label>Select Students:</label>
                   <div className="student-list">
                     {students.map((student, index) => (
                       <div className="student-item" key={index}>
@@ -195,7 +176,7 @@ const handleCreateTeam = async () => {
                           value={student}
                           checked={formData.selectedStudents.includes(student)}
                           onChange={handleStudentChange}
-                          disabled={assignedStudents.includes(student)} // Disable checkbox if student is already assigned
+                          disabled={assignedStudents.includes(student)}
                         />
                         <label
                           htmlFor={student}
@@ -206,7 +187,6 @@ const handleCreateTeam = async () => {
                       </div>
                     ))}
                   </div>
-                  <br />
                   <button type="button" onClick={prevStep}>Back</button>
                   <button type="submit" disabled={formData.selectedStudents.length === 0}>
                     Create Team
@@ -217,8 +197,6 @@ const handleCreateTeam = async () => {
           </div>
         </div>
       )}
-
-      {/* Dynamically show the created teams */}
       <div className="team-list">
         <h2>Teams</h2>
         {teams.map((team, index) => (

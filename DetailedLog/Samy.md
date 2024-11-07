@@ -22,3 +22,6 @@
 - Ensured work was done by team members (With some exceptions)      1h
 - Helped Aninnda and Dylan on their task for setting up database and teamform/ratings page      2h
 - Worked with Dylan to fix error in the TeamForm/Ratings connection to database     2h
+- Fixed issue where session was not loaded properly. 1h
+
+## Sprint 3
