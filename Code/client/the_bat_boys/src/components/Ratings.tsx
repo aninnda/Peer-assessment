@@ -19,8 +19,9 @@ const Ratings: React.FC = () => {
   useEffect(() => {
     const fetchRoleAndUser = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/session", { withCredentials: true });
+        const response = await axios.get("http://localhost:3000/session");
         setRole(response.data.role);
+        console.log(response.data);
         setStudentUsername(response.data.username);
       } catch (error) {
         console.error("Error fetching session:", error);
@@ -33,7 +34,7 @@ const Ratings: React.FC = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/users", { withCredentials: true });
+        const response = await axios.get("http://localhost:3000/users");
         setStudents(response.data.map((user: { username: string }) => user.username));
         
         // Initialize ratings for all students
@@ -54,7 +55,7 @@ const Ratings: React.FC = () => {
     const fetchTeam = async () => {
       if (studentUsername) {
         try {
-          const response = await axios.get(`http://localhost:3000/teams`, { withCredentials: true });
+          const response = await axios.get(`http://localhost:3000/teams`);
           const team = response.data.selectedStudents;
           
           // Exclude the current student from their team members list
@@ -109,7 +110,7 @@ const Ratings: React.FC = () => {
 
   const fetchRatingTable = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/ratings', { withCredentials: true });
+      const response = await axios.get('http://localhost:3000/ratings');
       setRatingTable(response.data);
     } catch (error) {
       console.error("Error fetching ratings table:", error);

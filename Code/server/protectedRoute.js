@@ -15,18 +15,18 @@ const connection = require('./db');
 //     });
 // });
 
-router.get('/ratings', verifyToken, (req, res) => {
-    const query = 'SELECT * FROM ratings';
-    connection.query(query, (error, results) => {
-        if (error) {
-            console.error(error);
-            return res.status(500).send();
-        }
-        res.json(results);
-    });
-});
+// router.get('/ratings', verifyToken, (req, res) => {
+//     const query = 'SELECT * FROM ratings';
+//     connection.query(query, (error, results) => {
+//         if (error) {
+//             console.error(error);
+//             return res.status(500).send();
+//         }
+//         res.json(results);
+//     });
+// });
 
-module.exports = router;
+// module.exports = router;
 //TO FIX:
 //Protected routes are in the backend.
 //The frontend needs to be able to access these routes.

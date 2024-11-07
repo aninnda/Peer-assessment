@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
 INSERT IGNORE INTO users (username, password, role, name, team) VALUES
 ('dylan', 'Dylan123', 'student', 'Dylan Moos', 'bat boys'),
 ('samy', 'Samy123', 'student', 'Samy Mezimez', 'bat boys'),
-('aninnda', 'Aninnda123', 'instructor', 'Aninnda Kumar Datta');
+('aninnda', 'Aninnda123', 'instructor', 'Aninnda Kumar Datta', '');
 
 CREATE TABLE IF NOT EXISTS teams (
 	team_id INT PRIMARY KEY AUTO_INCREMENT,

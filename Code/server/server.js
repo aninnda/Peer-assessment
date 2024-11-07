@@ -71,8 +71,9 @@ app.post('/users/login', (req, res) => {
 
         // Check if the password matches (you might want to use bcrypt for hashing in production)
         if (password === user.password) {
-            res.session.user = { id: user.id, name: user.username, role: user.role };
-            res.send({ message: 'Success', user: { name: user.name, role: user.role } });
+            req.session.user = user;
+            console.log(req.session.user, "blablabala");
+            res.send({ message: 'Success', user: { name: user.username, role: user.role } });
         } else {
             return res.status(400).send('Incorrect password');
         }
