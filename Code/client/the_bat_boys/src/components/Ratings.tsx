@@ -35,7 +35,7 @@ const Ratings: React.FC = () => {
       try {
         const response = await axios.get("http://localhost:3000/users", { withCredentials: true });
         setStudents(response.data.map((user: { username: string }) => user.username));
-        
+
         // Initialize ratings for all students
         const initialRatings: { [key: string]: { cooperation: number, conceptual: number, practical: number, ethic: number, comments: string } } = {};
         response.data.forEach((user: { username: string }) => {
@@ -56,7 +56,7 @@ const Ratings: React.FC = () => {
         try {
           const response = await axios.get(`http://localhost:3000/teams`, { withCredentials: true });
           const team = response.data.selectedStudents;
-          
+
           // Exclude the current student from their team members list
           setTeamMembers(team.filter((member: string) => member !== studentUsername));
         } catch (error) {

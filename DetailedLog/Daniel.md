@@ -8,3 +8,8 @@
 - Wrote the User Stories for Sprint 2 and edited the existing ones (written by Samy) to better fit the format. Time spent: 2h00
 
 - Wrote the task breakdown and precised the dependencies and estimated efforts. Time spent: 1h30
+
+## Sprint 3
+- Wrote the sprint 3 planning in the Excel.Time spent: 45 mins
+- Wrote the User Stories for Sprint 2. Time spent: 45 mins
+- Wrote the task breakdown and precised the dependencies and estimated efforts. Time spent: 20 mins
