@@ -14,6 +14,16 @@ const Ratings: React.FC = () => {
   const [showConfirmation, setShowConfirmation] = useState(false); // Show confirmation message
   const [isSubmitting, setIsSubmitting] = useState(false); // Handle submitting state
   const [ratingTable, setRatingTable] = useState<any[]>([]);
+  const [showSummaryTable, setShowSummaryTable] = useState(false);
+  const [showDetailedTable, setShowDetailedTable] = useState(false);
+
+  const handleSummaryClick = () => {
+    setShowSummaryTable(!showSummaryTable);
+  };
+
+  const handleDetailedClick = () => {
+    setShowDetailedTable(!showDetailedTable);
+  };
 
   // Fetch the user's session (role and username)
   useEffect(() => {
@@ -70,9 +80,49 @@ const Ratings: React.FC = () => {
   // Check if the user is authorized to access the page
   if (role !== 'student') {
     return (
-      <div>
+      <div className="dashboard-container">
         <Navbar />
-        You are not authorized to view this page.
+        <h1>Welcome to the Dashboard</h1>
+        <button onClick={handleSummaryClick}>Summary View</button>
+        {showSummaryTable && (
+          <table>
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Full Name</th>
+                <th>Team</th>
+                <th>Cooperation</th>
+                <th>Conceptual contribution</th>
+                <th>Practical contribution</th>
+                <th>Work Ethic</th>
+                <th>Average</th>
+                <th>Peers who responded</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Add rows here */}
+            </tbody>
+          </table>
+        )}
+        <button onClick={handleDetailedClick}>Detailed View</button>
+        {showDetailedTable && (
+          <table>
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Cooperation</th>
+                <th>Conceptual</th>
+                <th>Practical</th>
+                <th>Work Ethic</th>
+                <th>Average</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Add rows here */}
+            </tbody>
+          </table>
+        )}
+        <p> </p>
       </div>
     );
   }
