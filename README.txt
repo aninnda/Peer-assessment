@@ -54,14 +54,13 @@ To see created users open http://localhost:3000/users
 
 
 TO DO
-- Add details to meeting minutes 1-2-3 according to format online
-- Add clean Homepage to website (details to be discussed)
 - Backend code need to be fixed
     - Separation into multiple files
-    - Universal code (works with or without db depending how users are given)
-    - Add full auth logic
-    - Add session based Login
-- Clean up front end and make it not hurrendous
-- Add additional functionalities for bonus points??
+- Add a go back button for team name selection
+- Add a modify team option to add/remove students
+- CSS!!!!!
+
+.env needs to be place in gitignore and put password of personal db
+
 
 

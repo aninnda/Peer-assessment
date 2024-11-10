@@ -25,3 +25,6 @@
 - Fixed issue where session was not loaded properly. 1h
 
 ## Sprint 3
+- Added rating page for instructors showing summary/detailed view      2h
+- Fixed team page for instructor/students with backend      3h
+
