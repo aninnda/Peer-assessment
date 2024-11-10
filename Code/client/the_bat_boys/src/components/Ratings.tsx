@@ -30,8 +30,9 @@ const Ratings: React.FC = () => {
     const fetchRoleAndUser = async () => {
       try {
         const response = await axios.get("http://localhost:3000/session");
-        setRole(response.data.role);
         console.log(response.data);
+        setRole(response.data.role);
+        
         setStudentUsername(response.data.username);
       } catch (error) {
         console.error("Error fetching session:", error);

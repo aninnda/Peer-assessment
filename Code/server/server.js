@@ -119,11 +119,12 @@ app.get('/teams', (req, res) => {
 });
 
 app.get('/session', (req, res) => {
-    if (req.session && req.session.user) {
-        res.json(req.session.user);
-    } else {
-        res.status(401).send('Unauthorized');
-    }
+    res.json(req.session.user);
+})
+
+app.post('/session', (req, res) => {
+    req.session.user = req.body;
+    res.send();
 })
 
 
