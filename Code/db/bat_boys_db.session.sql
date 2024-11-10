@@ -14,7 +14,20 @@ CREATE TABLE IF NOT EXISTS users (
 INSERT IGNORE INTO users (username, password, role, name, team) VALUES
 ('dylan', 'Dylan123', 'student', 'Dylan Moos', 'bat boys'),
 ('samy', 'Samy123', 'student', 'Samy Mezimez', 'bat boys'),
-('aninnda', 'Aninnda123', 'instructor', 'Aninnda Kumar Datta', '');
+('daniel', 'Daniel123', 'student', 'Daniel Pinto', 'team 2'),
+('aymen', 'Aymen123', 'student', 'Aymen Mefti', 'team 2'),
+('karim', 'Karim123', 'student', 'Karim Naja', 'team 2'),
+('alexander', 'Alex123', 'student', 'Alexander Smith', NULL),
+('bethany', 'Beth123', 'student', 'Bethany Lee', NULL),
+('chris', 'Chris123', 'student', 'Chris Johnson', NULL),
+('diana', 'Diana123', 'student', 'Diana Garcia', NULL),
+('evan', 'Evan123', 'student', 'Evan Martinez', NULL),
+('fiona', 'Fiona123', 'student', 'Fiona Brown', NULL),
+('george', 'George123', 'student', 'George Clark', NULL),
+('hannah', 'Hannah123', 'student', 'Hannah Lewis', NULL),
+('isaac', 'Isaac123', 'student', 'Isaac Walker', NULL),
+('julie', 'Julie123', 'student', 'Julie Hall', NULL),
+('aninnda', 'Aninnda123', 'instructor', 'Aninnda Kumar Datta', 'Instructor');
 
 CREATE TABLE IF NOT EXISTS teams (
 	team_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -23,7 +36,9 @@ CREATE TABLE IF NOT EXISTS teams (
 );
 
 INSERT IGNORE INTO teams (team_name, members) VALUES
-('bat boys', JSON_ARRAY('dylan', 'samy'));
+('bat boys', JSON_ARRAY('dylan', 'samy')),
+('team 2', JSON_ARRAY('daniel', 'aymen', 'karim'));;
+
 
 CREATE TABLE IF NOT EXISTS ratings (
     id INT AUTO_INCREMENT PRIMARY KEY,

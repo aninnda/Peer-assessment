@@ -27,8 +27,13 @@ app.use(cors(corsOptions));
 //app.use(cookieParser());
 app.use(session({
     secret: 'secret',
-    resave: false,
-    saveUninitialized: false
+    resave: true,
+    saveUninitialized: true,
+    cookie: { 
+        secure: false,
+        httpOnly: true,
+        sameSite: 'lax',
+    }
 }));
 
 
@@ -38,6 +43,7 @@ app.get('/users', (req, res) => {
             console.log(err);
             return res.status(500).send();
         }
+        console.log(req.session.user);
         res.json(results);
     });
 });
@@ -65,15 +71,11 @@ app.post('/users/login', (req, res) => {
 
         const user = results[0]; // Get the first user returned by the query
 
-        if (!user) {
-            return res.status(400).send('Cannot find user');
-        }
-
-        // Check if the password matches (you might want to use bcrypt for hashing in production)
+        // Check if the password matches
         if (password === user.password) {
             req.session.user = user;
-            console.log(req.session.user, "blablabala");
-            res.send({ message: 'Success', user: { name: user.username, role: user.role } });
+            console.log(req.session.user, "login");
+            res.send({ message: 'Success', user: { name: user.username, role: user.role }, req: req.session.user });
         } else {
             return res.status(400).send('Incorrect password');
         }
@@ -97,19 +99,9 @@ app.post('/teams', async (req, res) => {
 });
 
 app.get('/teams', (req, res) => {
-    const loggedInUser = req.session.user;
+    const query = 'SELECT * FROM teams';
 
-    if (!loggedInUser) {
-        return res.status(401).send('Unauthorized');
-    }
-
-    const query = `
-    SELECT * FROM sttudents
-    WHERE team_id = (
-        SELECT team_id FROM students WHERE id = ? 
-    ) AND id != ?`;
-
-    db.query(query,[loggedInUser, loggedInUser] , (err, results) => {
+    db.query(query, (err, results) => {
         if (err) {
             console.log(err);
             return res.status(500).send();
@@ -119,6 +111,7 @@ app.get('/teams', (req, res) => {
 });
 
 app.get('/session', (req, res) => {
+<<<<<<< HEAD
     res.json(req.session.user);
 })
 
@@ -126,6 +119,11 @@ app.post('/session', (req, res) => {
     req.session.user = req.body;
     res.send();
 })
+=======
+    console.log(req.session.user);
+    res.send(req.session.user);
+});
+>>>>>>> d5328ba597c9973943fef77cd793e5571f34b93a
 
 
 app.post('/ratings', (req, res) => {
@@ -154,6 +152,26 @@ app.post('/ratings', (req, res) => {
         }
     });
 });
+
+
+
+
+
+
+app.get('/test-session', (req, res) => {
+    req.session.testData = 'Hello, session!';
+    res.send('Session data set');
+});
+
+app.get('/retrieve-session', (req, res) => {
+    res.send(req.session.userRole || 'No session data');
+});
+
+
+
+
+
+
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');

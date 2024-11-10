@@ -2,11 +2,16 @@ const mysql = require("mysql2");
 const fs = require("fs");
 const path = require("path");
 
+
+//TO SETUP with gitignore
+require('dotenv').config();
+const password = process.env.DB_PASSWORD;
+
 //Database connection
 const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "MDEm0815.!2550", //TO CHANGE
+    password: password,
     database: "bat_boys_db",
     
 });

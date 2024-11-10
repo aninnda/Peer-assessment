@@ -29,7 +29,11 @@ const Ratings: React.FC = () => {
   useEffect(() => {
     const fetchRoleAndUser = async () => {
       try {
+<<<<<<< HEAD
         const response = await axios.get("http://localhost:3000/session");
+=======
+        const response = await axios.get("http://localhost:3000/session", { withCredentials: true });
+>>>>>>> d5328ba597c9973943fef77cd793e5571f34b93a
         console.log(response.data);
         setRole(response.data.role);
         
@@ -45,7 +49,7 @@ const Ratings: React.FC = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/users");
+        const response = await axios.get("http://localhost:3000/users", { withCredentials: true });
         setStudents(response.data.map((user: { username: string }) => user.username));
 
         // Initialize ratings for all students
@@ -66,7 +70,7 @@ const Ratings: React.FC = () => {
     const fetchTeam = async () => {
       if (studentUsername) {
         try {
-          const response = await axios.get(`http://localhost:3000/teams`);
+          const response = await axios.get(`http://localhost:3000/teams`, { withCredentials: true });
           const team = response.data.selectedStudents;
 
           // Exclude the current student from their team members list
@@ -79,8 +83,55 @@ const Ratings: React.FC = () => {
     fetchTeam();
   }, [studentUsername]);
 
-  // Check if the user is authorized to access the page
-  if (role !== 'student') {
+
+  const handleSave = async () => {
+    if (!selectedStudent) return;
+
+    setIsSubmitting(true); // Set submitting state to true to prevent multiple submissions
+    try {
+      // Submit the rating to the backend
+      await axios.post('http://localhost:3000/ratings', {
+        rater_username: studentUsername,
+        rated_username: selectedStudent,
+        team_name: '',
+        ratings: ratings[selectedStudent],
+        comments: comments,
+      }, { withCredentials: true });
+
+      // Show confirmation message
+      setShowConfirmation(true);
+      await fetchRatingTable();
+    } catch (error) {
+      console.error("Error submitting rating:", error);
+    } finally {
+      setIsSubmitting(false); // Reset submitting state after completion
+    }
+  };
+
+  const handleContinueRating = () => {
+    setShowConfirmation(false); // Hide confirmation message and continue
+    setSelectedStudent(null); // Reset the selected student
+  };
+
+  const fetchRatingTable = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/ratings', { withCredentials: true });
+      setRatingTable(response.data);
+    } catch (error) {
+      console.error("Error fetching ratings table:", error);
+    }
+  };
+
+  if (role !== 'instructor' && role !== 'student') {
+    return (
+      <div>
+        <Navbar />
+        You are not authorized to view this page.
+      </div>
+    )
+  }
+
+  if (role === 'instructor') {
     return (
       <div className="dashboard-container">
         <Navbar />
@@ -129,98 +180,63 @@ const Ratings: React.FC = () => {
     );
   }
 
-
-  const handleSave = async () => {
-    if (!selectedStudent) return;
-
-    setIsSubmitting(true); // Set submitting state to true to prevent multiple submissions
-    try {
-      // Submit the rating to the backend
-      await axios.post('http://localhost:3000/ratings', {
-        rater_username: studentUsername,
-        rated_username: selectedStudent,
-        team_name: '',
-        ratings: ratings[selectedStudent],
-        comments: comments,
-      }, { withCredentials: true });
-
-      // Show confirmation message
-      setShowConfirmation(true);
-      await fetchRatingTable();
-    } catch (error) {
-      console.error("Error submitting rating:", error);
-    } finally {
-      setIsSubmitting(false); // Reset submitting state after completion
-    }
-  };
-
-  const handleContinueRating = () => {
-    setShowConfirmation(false); // Hide confirmation message and continue
-    setSelectedStudent(null); // Reset the selected student
-  };
-
-  const fetchRatingTable = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/ratings');
-      setRatingTable(response.data);
-    } catch (error) {
-      console.error("Error fetching ratings table:", error);
-    }
-  };
-
-  return (
-    <div>
-      <Navbar />
-      <div className="container_ratings">
-        <h1>Student Ratings</h1>
-        {showConfirmation ? (
-          <div className="confirmation-box">
-            <h2>Rating Submitted Successfully!</h2>
-            <p>Your rating has been successfully sent.</p>
-            <button onClick={handleContinueRating}>Continue Rating</button>
-          </div>
-        ) : selectedStudent ? (
-          <div className="rating-box">
-            <h2>Rate {selectedStudent}</h2>
-            {['Cooperation', 'Conceptual Contribution', 'Practical Contribution', 'Work Ethic'].map((category, idx) => (
-              <div key={idx}>
-                <label>{category}</label>
-                <div className="rating-scale">
-                  {[1, 2, 3, 4, 5].map((num) => (
-                    <button
-                      key={num}
-                      className={ratings[selectedStudent][category.toLowerCase().replace(' ', '')] === num ? 'selected' : ''}
-                    >
-                      {num}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-            <div>
-              <label>Comments</label>
-              <textarea
-                value={ratings[selectedStudent]?.comments}
-              />
+  if (role === 'student') {
+    return (
+      <div>
+        <Navbar />
+        <div className="container_ratings">
+          <h1>Student Ratings</h1>
+          {showConfirmation ? (
+            <div className="confirmation-box">
+              <h2>Rating Submitted Successfully!</h2>
+              <p>Your rating has been successfully sent.</p>
+              <button onClick={handleContinueRating}>Continue Rating</button>
             </div>
-            <button onClick={handleSave} disabled={isSubmitting}>Save</button>
-          </div>
-        ) : (
-          <div>
-            <h2>Select a student to rate:</h2>
-            <ul>
-              {teamMembers.map((student) => (
-                <li key={student}>
-                  {student}
-                  <button onClick={() => setSelectedStudent(student)}>Rate</button>
-                </li>
+          ) : selectedStudent ? (
+            <div className="rating-box">
+              <h2>Rate {selectedStudent}</h2>
+              {['Cooperation', 'Conceptual Contribution', 'Practical Contribution', 'Work Ethic'].map((category, idx) => (
+                <div key={idx}>
+                  <label>{category}</label>
+                  <div className="rating-scale">
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <button
+                        key={num}
+                        className={ratings[selectedStudent][category.toLowerCase().replace(' ', '')] === num ? 'selected' : ''}
+                      >
+                        {num}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               ))}
-            </ul>
-          </div>
-        )}
+              <div>
+                <label>Comments</label>
+                <textarea
+                  value={ratings[selectedStudent]?.comments}
+                />
+              </div>
+              <button onClick={handleSave} disabled={isSubmitting}>Save</button>
+            </div>
+          ) : (
+            <div>
+              <h2>Select a student to rate:</h2>
+              <ul>
+                {teamMembers.map((student) => (
+                  <li key={student}>
+                    {student}
+                    <button onClick={() => setSelectedStudent(student)}>Rate</button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  
 };
 
 export default Ratings;
