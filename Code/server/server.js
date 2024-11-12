@@ -111,7 +111,6 @@ app.get('/teams', (req, res) => {
 });
 
 app.get('/session', (req, res) => {
-<<<<<<< HEAD
     res.json(req.session.user);
 })
 
@@ -119,11 +118,7 @@ app.post('/session', (req, res) => {
     req.session.user = req.body;
     res.send();
 })
-=======
-    console.log(req.session.user);
-    res.send(req.session.user);
-});
->>>>>>> d5328ba597c9973943fef77cd793e5571f34b93a
+
 
 
 app.post('/ratings', (req, res) => {

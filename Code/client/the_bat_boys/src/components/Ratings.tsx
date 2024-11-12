@@ -29,11 +29,7 @@ const Ratings: React.FC = () => {
   useEffect(() => {
     const fetchRoleAndUser = async () => {
       try {
-<<<<<<< HEAD
-        const response = await axios.get("http://localhost:3000/session");
-=======
         const response = await axios.get("http://localhost:3000/session", { withCredentials: true });
->>>>>>> d5328ba597c9973943fef77cd793e5571f34b93a
         console.log(response.data);
         setRole(response.data.role);
         
