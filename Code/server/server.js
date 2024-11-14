@@ -22,6 +22,8 @@ const jwt = require('jsonwebtoken'); //To create auth
 require('dotenv').config(); //Tokens secret key
 const bcrypt = require('bcrypt'); //To hash passwords
 
+
+
 app.use(express.json());
 app.use(cors(corsOptions));
 //app.use(cookieParser());
@@ -150,7 +152,3 @@ app.post('/ratings', (req, res) => {
 });
 
 module.exports = app;
-
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});

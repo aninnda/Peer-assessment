@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "start": "npm run dev && npm run setup-db",
     "setup-db": "node server/db.js",
     "dev": "nodemon server"

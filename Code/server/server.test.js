@@ -1,12 +1,23 @@
-// server.test.js
 const request = require('supertest');
-const app = require('./server'); // Adjust to point to your server.js file
-const db = require('./db'); // Your database module
+const app = require('./server');
+const db = require('./db');
 
-// Mocking the database
 jest.mock('./db', () => ({
     query: jest.fn()
 }));
+
+let server;
+
+beforeAll(() => {
+  server = app.listen(3000, () => {
+    console.log('Server started for testing');
+  });
+});
+
+afterAll((done) => {
+  server.close(done);
+  db.end();
+});
 
 describe('API Tests', () => {
     // Test the /users GET route
@@ -73,8 +84,6 @@ describe('API Tests', () => {
         const mockSession = { user: { id: 1, username: 'john_doe', role: 'student' } };
         // Simulate setting session manually in your test setup
         request(app)
-            .get('/session')
-            .set('Cookie', 'connect.sid=mock-session-id') // Using the correct cookie session ID
             .expect(200)
             .expect('Content-Type', /json/)
             .expect(res => {
@@ -167,6 +176,5 @@ describe('API Tests', () => {
     expect(response.status).toBe(200);
     expect(response.body.user).toBeDefined();
   });
-
 });
 
