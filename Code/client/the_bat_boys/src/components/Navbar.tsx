@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
             <NavLink
               to="/other"
               className={({ isActive }) => (isActive? 'nav-link active' : 'nav-link')}>
-              TBD
+              Forum
             </NavLink>
           </div>
         </div>

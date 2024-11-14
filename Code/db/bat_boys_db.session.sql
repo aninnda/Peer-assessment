@@ -52,6 +52,13 @@ CREATE TABLE IF NOT EXISTS ratings (
     comments TEXT DEFAULT NULL
 );
 
-INSERT IGNORE INTO ratings (rater_username, rated_user, team, conceptualContribution, practicalContribution, workEthic, cooperation, comments) VALUES
-('dylan', 'samy', 'bat boys', 5, 5, 1, 5, 'Great work samy but you have no work ethics'),
-('samy', 'dylan', 'bat boys', 5, 5, 5, 5, 'Great work dylan');
+-- INSERT IGNORE INTO ratings (rater_username, rated_user, team, conceptualContribution, practicalContribution, workEthic, cooperation, comments) VALUES
+-- ('dylan', 'samy', 'bat boys', 5, 5, 1, 5, 'Great work samy but you have no work ethics'),
+-- ('samy', 'dylan', 'bat boys', 5, 5, 5, 5, 'Great work dylan');
+
+CREATE TABLE IF NOT EXISTS forum (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    author VARCHAR(50) NOT NULL,
+    team VARCHAR(50) NOT NULL,
+    content TEXT NOT NULL
+);

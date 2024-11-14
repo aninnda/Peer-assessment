@@ -27,7 +27,7 @@ app.use(cors(corsOptions));
 //app.use(cookieParser());
 app.use(session({
     secret: 'secret',
-    resave: true,
+    resave: false,
     saveUninitialized: true,
     cookie: { 
         secure: false,
@@ -121,12 +121,43 @@ app.post('/session', (req, res) => {
 
 
 
+app.get('/ratings', (req, res) => { 
+
+    const loggedInUsername = req.session.user.username;  // Save username
+    // Find current user's team
+    const teamQuery = 'SELECT team FROM users WHERE username = ?';
+
+    db.query(teamQuery, [loggedInUsername], (err, teamResults) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Error finding team');
+        }
+
+        const teamName = teamResults[0]?.team;
+
+        if (!teamName) {
+            return res.status(404).send('Team not found for the user');
+        }
+
+        // Find team members
+        const membersQuery = 'SELECT username FROM users WHERE team = ?';
+
+        db.query(membersQuery, [teamName], (err, membersResults) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('Error retrieving team members');
+            }
+
+            const teamMembers = membersResults.map(member => member.username);
+            res.json(teamMembers);
+        });
+    });
+});
+
 app.post('/ratings', (req, res) => {
     const { rater_username, rated_username, team_name, ratings, comments } = req.body;  
 
-    const query = `INSERT INTO ratings (rater_username, rated_username, team_name, 
-    conceptual_contribution, practical_contribution, work_ethic, cooperation, comments)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    const query = 'INSERT INTO ratings (rater_username, rated_username, team_name, conceptual_contribution, practical_contribution, work_ethic, cooperation, comments) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
     const values = [
         rater_username,
@@ -149,7 +180,24 @@ app.post('/ratings', (req, res) => {
 });
 
 
+app.get("/other", (req, res) => {
+    db.query("SELECT * FROM forum", (err, results) => {
+      if (err) {
+        throw err;
+    } else {
+      res.json(results);
+    }
+    });
+  });
 
+  app.post("/other", (req, res) => {
+    const { author, content } = req.body;
+    const query = "INSERT INTO forum (author, content) VALUES (?, ?)";
+    db.query(query, [author, content], (err, results) => {
+      if (err) throw err;
+      res.status(201).json({ id: results.insertId, author, content});
+    });
+  });
 
 
 
