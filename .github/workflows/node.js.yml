@@ -13,6 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      - name: List files
+        run: ls -R
+
+
       - name: Checkout code
         uses: actions/checkout@v3
 
