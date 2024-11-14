@@ -16,7 +16,7 @@ const Ratings: React.FC = () => {
   const [ratingTable, setRatingTable] = useState<any[]>([]);
   const [showSummaryTable, setShowSummaryTable] = useState(false);
   const [showDetailedTable, setShowDetailedTable] = useState(false);
-  const [team_name, setTeamName] = useState<string | null>(null);
+  const [team, setTeam] = useState<string | null>(null);
 
   const handleSummaryClick = () => {
     setShowSummaryTable(!showSummaryTable);
@@ -33,7 +33,7 @@ const Ratings: React.FC = () => {
         const response = await axios.get("http://localhost:3000/session", { withCredentials: true });
         console.log(response.data);
         setRole(response.data.role);
-        setTeamName(response.data.team);
+        setTeam(response.data.team);
         setStudentUsername(response.data.username);
       } catch (error) {
         console.error("Error fetching session:", error);
@@ -64,7 +64,7 @@ const Ratings: React.FC = () => {
 
 
   useEffect(() => {
-    if (team_name) {
+    if (team) {
         const fetchTeamMembers = async () => {
             try {
                 const response = await axios.get("http://localhost:3000/ratings", { withCredentials: true });
@@ -76,9 +76,9 @@ const Ratings: React.FC = () => {
 
         fetchTeamMembers();
     } else {
-        console.error("Team name is not available");
+        console.log("Team name is not available");
     }
-}, [team_name]); 
+  }, [team]); 
 
 
 
@@ -111,7 +111,7 @@ const handleCommentsChange = (student: string, value: string) => {
       const ratingData = {
         rater_username: studentUsername,
         rated_username: selectedStudent,
-        team_name: team_name,
+        team: team,
         ratings: ratings[selectedStudent],
         comments: ratings[selectedStudent]?.comments,
       };
@@ -142,19 +142,6 @@ const handleCommentsChange = (student: string, value: string) => {
       console.error("Error fetching ratings table:", error);
     }
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   
 
@@ -223,12 +210,11 @@ const handleCommentsChange = (student: string, value: string) => {
       <div>
         <Navbar />
         <div className="container_ratings">
-          <h1>Student Ratings</h1>
+          <h1>Student Rating</h1>
           {showConfirmation ? (
             <div className="confirmation-box">
-              <h2>Rating Submitted Successfully!</h2>
-              <p>Your rating has been successfully sent.</p>
-              <button onClick={handleContinueRating}>Continue Rating</button>
+              <p>Please confirm rating submission.</p>
+              <button onClick={handleContinueRating}>Confirm Rating</button>
             </div>
           ) : selectedStudent ? (
             <div className="rating-box">

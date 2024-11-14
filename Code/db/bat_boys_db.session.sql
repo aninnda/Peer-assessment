@@ -43,18 +43,19 @@ INSERT IGNORE INTO teams (team_name, members) VALUES
 CREATE TABLE IF NOT EXISTS ratings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     rater_username VARCHAR(50) NOT NULL,
-    rated_user VARCHAR(50) NOT NULL,
+    rated_username VARCHAR(50) NOT NULL,
     team VARCHAR(50) NOT NULL,
     conceptualContribution INT,
     practicalContribution INT,
     workEthic INT,
     cooperation INT,
-    comments TEXT DEFAULT NULL
+    comments TEXT DEFAULT NULL,
+    UNIQUE (rater_username, rated_username)
 );
 
--- INSERT IGNORE INTO ratings (rater_username, rated_user, team, conceptualContribution, practicalContribution, workEthic, cooperation, comments) VALUES
--- ('dylan', 'samy', 'bat boys', 5, 5, 1, 5, 'Great work samy but you have no work ethics'),
--- ('samy', 'dylan', 'bat boys', 5, 5, 5, 5, 'Great work dylan');
+--INSERT IGNORE INTO ratings (rater_username, rated_username, team, conceptualContribution, practicalContribution, workEthic, cooperation, comments) VALUES
+--('dylan', 'samy', 'bat boys', 5, 5, 1, 5, 'Great work samy but you have no work ethics'),
+--('samy', 'dylan', 'bat boys', 5, 5, 5, 5, 'Great work dylan');
 
 CREATE TABLE IF NOT EXISTS forum (
     id INT AUTO_INCREMENT PRIMARY KEY,

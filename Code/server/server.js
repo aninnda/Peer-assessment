@@ -3,7 +3,6 @@ const express = require('express');
 const app = express();
 
 // Cookies
-//const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
 //Communication with frontend
@@ -12,21 +11,13 @@ const corsOptions = { origin: 'http://localhost:5173', credentials: true }; //To
 
 //Database
 const db = require('./db.js');
-//Remove when db.js + auth.js is setup
-//const { executeQuery } = require('./db.js'); //To execute queries
 
 //Authorization and authentication
-//const auth = require('./auth.js');
-const verifyToken = require('./authMiddleware');
-const jwt = require('jsonwebtoken'); //To create auth
 require('dotenv').config(); //Tokens secret key
-const bcrypt = require('bcrypt'); //To hash passwords
-
 
 
 app.use(express.json());
 app.use(cors(corsOptions));
-//app.use(cookieParser());
 app.use(session({
     secret: 'secret',
     resave: false,
@@ -158,17 +149,26 @@ app.get('/ratings', (req, res) => {
 });
 
 app.post('/ratings', (req, res) => {
-    const { rater_username, rated_username, team_name, ratings, comments } = req.body;  
+    const { rater_username, rated_username, team, ratings, comments } = req.body;  
 
-    const query = 'INSERT INTO ratings (rater_username, rated_username, team_name, conceptual_contribution, practical_contribution, work_ethic, cooperation, comments) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = `
+        INSERT INTO ratings (rater_username, rated_username, team, conceptualContribution, practicalContribution, workEthic, cooperation, comments) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+            conceptualContribution = VALUES(conceptualContribution),
+            practicalContribution = VALUES(practicalContribution),
+            workEthic = VALUES(workEthic),
+            cooperation = VALUES(cooperation),
+            comments = VALUES(comments)
+        `;
 
     const values = [
         rater_username,
         rated_username,
-        team_name,
+        team,
         ratings.conceptual,
         ratings.practical,
-        ratings.workEthic,
+        ratings.ethic,
         ratings.cooperation,
         comments
     ];
@@ -214,12 +214,8 @@ app.get('/retrieve-session', (req, res) => {
 });
 
 
-
-
-
-
-
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
+
 module.exports = app;
