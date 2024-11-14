@@ -61,42 +61,36 @@ app.post('/users', async (req, res) => {
 
 app.post('/users/login', (req, res) => {
     const { name, password, role } = req.body;
-
     const query = 'SELECT * FROM users WHERE username = ? AND role = ?';
     db.query(query, [name, role], (error, results) => {
         if (error) {
             console.error('Error querying the database:', error);
             return res.status(500).send('Internal server error');
         }
-
-        const user = results[0]; // Get the first user returned by the query
-
-        // Check if the password matches
-        if (password === user.password) {
-            req.session.user = user;
-            console.log(req.session.user, "login");
-            res.send({ message: 'Success', user: { name: user.username, role: user.role }, req: req.session.user });
-        } else {
-            return res.status(400).send('Incorrect password');
+        const user = results[0];
+        if (!user || password !== user.password) {
+            return res.status(400).send({ message: 'Invalid credentials' });
         }
+        req.session.user = user;
+        res.status(200).send({ message: 'Success', user: { name: user.username, role: user.role } });
     });
 });
+
 
 // Create teams
 app.post('/teams', async (req, res) => {
     const { teamName, selectedStudents } = req.body;
-
     const query = 'INSERT INTO teams (team_name, members) VALUES (?, ?)';
-    const studentsJson = JSON.stringify(selectedStudents); 
-
+    const studentsJson = JSON.stringify(selectedStudents);
     db.query(query, [teamName, studentsJson], (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).send();
         }
-        res.status(201).json({ message: 'Team created', teamId: result.insertId });
+        res.status(201).json({ message: 'Team created', team: { name: teamName, teamId: result.insertId } });
     });
 });
+
 
 app.get('/teams', (req, res) => {
     const query = 'SELECT * FROM teams';
@@ -109,6 +103,13 @@ app.get('/teams', (req, res) => {
         res.json(results);
     });
 });
+
+app.post('/teams/assign', (req, res) => {
+    const { studentId, teamId } = req.body;
+    // Logic for assigning students to a team
+    res.status(200).send({ message: 'Student assigned to team successfully' });
+});
+
 
 app.get('/session', (req, res) => {
     console.log(req.session.user);
@@ -143,25 +144,7 @@ app.post('/ratings', (req, res) => {
     });
 });
 
-
-
-
-
-
-app.get('/test-session', (req, res) => {
-    req.session.testData = 'Hello, session!';
-    res.send('Session data set');
-});
-
-app.get('/retrieve-session', (req, res) => {
-    res.send(req.session.userRole || 'No session data');
-});
-
-
-
-
-
-
+module.exports = app;
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');

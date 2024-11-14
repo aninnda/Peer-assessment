@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS teams (
 
 INSERT IGNORE INTO teams (team_name, members) VALUES
 ('bat boys', JSON_ARRAY('dylan', 'samy')),
-('team 2', JSON_ARRAY('daniel', 'aymen', 'karim'));;
+('team 2', JSON_ARRAY('daniel', 'aymen', 'karim'));
 
 
 CREATE TABLE IF NOT EXISTS ratings (
