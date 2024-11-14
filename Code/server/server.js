@@ -112,9 +112,14 @@ app.post('/teams/assign', (req, res) => {
 
 
 app.get('/session', (req, res) => {
-    console.log(req.session.user);
-    res.send(req.session.user);
-});
+    res.json(req.session.user);
+})
+
+app.post('/session', (req, res) => {
+    req.session.user = req.body;
+    res.send();
+})
+
 
 
 app.post('/ratings', (req, res) => {
