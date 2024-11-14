@@ -17,6 +17,7 @@ const Ratings: React.FC = () => {
   const [showSummaryTable, setShowSummaryTable] = useState(false);
   const [showDetailedTable, setShowDetailedTable] = useState(false);
   const [team, setTeam] = useState<string | null>(null);
+  const [avgRatingTable, setAvgRatingTable] = useState<any[]>([]);
 
   const handleSummaryClick = () => {
     setShowSummaryTable(!showSummaryTable);
@@ -111,6 +112,7 @@ const handleCommentsChange = (student: string, value: string) => {
       const ratingData = {
         rater_username: studentUsername,
         rated_username: selectedStudent,
+        rated_name: selectedStudent,
         team: team,
         ratings: ratings[selectedStudent],
         comments: ratings[selectedStudent]?.comments,
@@ -142,6 +144,20 @@ const handleCommentsChange = (student: string, value: string) => {
       console.error("Error fetching ratings table:", error);
     }
   };
+
+  const fetchAvgRatings = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/average-ratings', { withCredentials: true });
+      setAvgRatingTable(response.data);
+    } catch (error) {
+      console.error("Error fetching ratings table:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchAvgRatings();
+  }, []);
+
 
   
 
@@ -176,27 +192,66 @@ const handleCommentsChange = (student: string, value: string) => {
               </tr>
             </thead>
             <tbody>
-              {/* Add rows here */}
+              {avgRatingTable.map((student) => (
+                  <tr key={student.student_id}>
+                    <td>{student.student_id}</td>
+                    <td>{student.name}</td>
+                    <td>{student.team}</td>
+                    <td>{student.cooperation_avg}</td>
+                    <td>{student.conceptual_avg}</td>
+                    <td>{student.practical_avg}</td>
+                    <td>{student.work_ethic_avg}</td>
+                    <td>{student.overall_avg}</td>
+                    <td>{student.peers_responded}</td>
+                  </tr>
+                ))
+              }
             </tbody>
           </table>
         )}
         <button onClick={handleDetailedClick}>Detailed View</button>
-        {showDetailedTable && (
-          <table>
-            <thead>
-              <tr>
-                <th>Member</th>
-                <th>Cooperation</th>
-                <th>Conceptual</th>
-                <th>Practical</th>
-                <th>Work Ethic</th>
-                <th>Average</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Add rows here */}
-            </tbody>
-          </table>
+        {showDetailedTable && selectedStudent && (
+          <div>
+            <h2>Team: {team}</h2>
+            <h3>Student Username: {selectedStudent}</h3>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Cooperation</th>
+                  <th>Conceptual</th>
+                  <th>Practical</th>
+                  <th>Work Ethic</th>
+                  <th>Average</th>
+                </tr>
+              </thead>
+              <tbody>
+                {teamMembers.map((member: any) => (
+                  <tr key={member.rater_username}>
+                    <td>{member.rater_username}</td>
+                    <td>{member.cooperation}</td>
+                    <td>{member.conceptualContribution}</td>
+                    <td>{member.practicalContribution}</td>
+                    <td>{member.workEthic}</td>
+                    <td>
+                      {(
+                        (member.cooperation + member.conceptualContribution + member.practicalContribution + member.workEthic) /
+                        4
+                      ).toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <h4>Comments:</h4>
+            <ul>
+              {teamMembers.map((member: any) => (
+                <li key={member.rater_username}>{member.comments}</li>
+              ))}
+            </ul>
+          </div>
         )}
         <p> </p>
       </div>

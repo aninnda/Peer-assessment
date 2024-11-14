@@ -149,11 +149,11 @@ app.get('/ratings', (req, res) => {
 });
 
 app.post('/ratings', (req, res) => {
-    const { rater_username, rated_username, team, ratings, comments } = req.body;  
+    const { rater_username, rated_username, rated_name, team, ratings, comments } = req.body;  
 
     const query = `
-        INSERT INTO ratings (rater_username, rated_username, team, conceptualContribution, practicalContribution, workEthic, cooperation, comments) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO ratings (rater_username, rated_username, rated_name, team, conceptualContribution, practicalContribution, workEthic, cooperation, comments) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE
             conceptualContribution = VALUES(conceptualContribution),
             practicalContribution = VALUES(practicalContribution),
@@ -165,6 +165,7 @@ app.post('/ratings', (req, res) => {
     const values = [
         rater_username,
         rated_username,
+        rated_name,
         team,
         ratings.conceptual,
         ratings.practical,
@@ -181,6 +182,38 @@ app.post('/ratings', (req, res) => {
         }
     });
 });
+
+app.get('/average-ratings', async (req, res) => {
+    try {
+      // SQL query to calculate averages for each student
+      const query = `
+        SELECT 
+          rated_username AS student_id,
+          team,
+          AVG(cooperation) AS cooperation_avg,
+          AVG(conceptualContribution) AS conceptual_avg,
+          AVG(practicalContribution) AS practical_avg,
+          AVG(workEthic) AS work_ethic_avg,
+          (AVG(cooperation) + AVG(conceptualContribution) + AVG(practicalContribution) + AVG(workEthic)) / 4 AS overall_avg,
+          COUNT(rater_username) AS peers_responded
+        FROM ratings
+        GROUP BY rated_username, team
+      `;
+  
+      // Execute the query
+      db.query(query, (err, results) => {
+        if (err) {
+          console.error('Error fetching average ratings:', err);
+          res.status(500).json({ message: 'Error fetching average ratings' });
+          return;
+        }
+        res.status(200).json(results);
+      });
+    } catch (error) {
+      console.error('Server error:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
 
 
 app.get("/other", (req, res) => {

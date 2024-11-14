@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS ratings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     rater_username VARCHAR(50) NOT NULL,
     rated_username VARCHAR(50) NOT NULL,
+    rated_name VARCHAR(50) NOT NULL,
     team VARCHAR(50) NOT NULL,
     conceptualContribution INT,
     practicalContribution INT,
