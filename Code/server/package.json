@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --detectOpenHandles",
     "start": "npm run dev && npm run setup-db",
     "setup-db": "node server/db.js",
     "dev": "nodemon server"
@@ -26,8 +26,15 @@
     "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
-    "nodemon": "^3.1.7"
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.7",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.3"
   }
 }
