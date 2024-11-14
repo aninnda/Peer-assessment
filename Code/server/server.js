@@ -80,6 +80,14 @@ app.post('/teams', async (req, res) => {
             console.error(err);
             return res.status(500).send();
         }
+        const updateQuery = 'UPDATE users SET team = ? WHERE username = ?';
+        selectedStudents.forEach(student => {
+            db.query(updateQuery, [teamName, student], (err) => {
+                if (err) {
+                    console.error(`Error updating team for student ${student}:`, err);
+                }
+            });
+        });
         res.status(201).json({ message: 'Team created', team: { name: teamName, teamId: result.insertId } });
     });
 });

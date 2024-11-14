@@ -10,7 +10,7 @@ const isTestEnv = process.env.NODE_ENV === 'test';
 const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "Samy1445",
+    password: "MDEm0815.!2550",
     database: "bat_boys_db",
 });
 
