@@ -14,3 +14,11 @@
 - Helped organize and discuss backend development
 - Created the ratings page that allows the student to rate their peers
 - Total time spent: approximately 7 hours
+
+## Sprint 3
+- Helped dylan seeting up the past issues with sprint 2
+- Worked on showing the summary of the ratings
+- Reviewed the written documents
+- Helped setting team meeting
+- Total time spent: approximately 9 hours
+  
