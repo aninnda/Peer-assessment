@@ -1,4 +1,4 @@
-*,
+/* *,
 *::before,
 *::after {
   box-sizing: border-box;
@@ -64,4 +64,4 @@
 
   .comment-form button:hover {
     background-color: #555;
-  }
+  } */

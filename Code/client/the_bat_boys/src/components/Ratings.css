@@ -1,4 +1,4 @@
-
+/* 
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -10,12 +10,12 @@ body {
 }
 
 .container_ratings {
-    margin-top: 80px; /* To lower the Student Ratings title */
+    margin-top: 80px; 
     background-color: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    width: 500px; /* Increased width to accommodate the rating scale */
+    width: 500px; 
 }
 
 h1 {
@@ -58,4 +58,4 @@ textarea {
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 10px;
-}
+} */

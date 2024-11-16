@@ -1,8 +1,8 @@
 import Navbar from './Navbar';
 import { useEffect, useState } from 'react';
+import './Dashboard.css';
 
 const Dashboard = () => {
-
     const [showSummaryTable, setShowSummaryTable] = useState(false);
     const [showDetailedTable, setShowDetailedTable] = useState(false);
 
@@ -17,12 +17,15 @@ const Dashboard = () => {
     return (
         <div className="dashboard-container">
             <Navbar />
-            <h1>Welcome to the Dashboard</h1>
-            <button onClick={handleSummaryClick}>Summary View</button>
+            <h1 className="dashboard-title">Welcome to the Dashboard</h1>
+
+            <button className="dashboard-button summary-button" onClick={handleSummaryClick}>
+                Summary View
+            </button>
             {showSummaryTable && (
-                <table>
+                <table className="dashboard-table summary-table">
                     <thead>
-                        <tr>
+                        <tr className="dashboard-table-header">
                             <th>Student ID</th>
                             <th>Full Name</th>
                             <th>Team</th>
@@ -34,16 +37,19 @@ const Dashboard = () => {
                             <th>Peers who responded</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="dashboard-table-body">
                         {/* Add rows here */}
                     </tbody>
                 </table>
             )}
-            <button onClick={handleDetailedClick}>Detailed View</button>
+
+            <button className="dashboard-button detailed-button" onClick={handleDetailedClick}>
+                Detailed View
+            </button>
             {showDetailedTable && (
-                <table>
+                <table className="dashboard-table detailed-table">
                     <thead>
-                        <tr>
+                        <tr className="dashboard-table-header">
                             <th>Member</th>
                             <th>Cooperation</th>
                             <th>Conceptual</th>
@@ -52,12 +58,13 @@ const Dashboard = () => {
                             <th>Average</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="dashboard-table-body">
                         {/* Add rows here */}
                     </tbody>
                 </table>
             )}
-            <p> </p>
+
+            <p className="dashboard-footer-space"> </p>
         </div>
     );
 };

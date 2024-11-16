@@ -1,7 +1,12 @@
 /* Navbar.css */
 
+* {
+    box-sizing: border-box;
+  }
+
 .navbar {
-    background-color: #f8f8f8; /* Light neutral background */
+    background: rgb(24 14 56 / 44%);
+    backdrop-filter: blur(16px);
     position: fixed; /* Make the navbar fixed */
     top: 0; /* Stick to the top of the viewport */
     left: 0; /* Align to the left */
@@ -20,23 +25,32 @@
 }
 
 .navbar a {
-    color: #555; /* Darker neutral color for text */
-    padding: 14px 16px; /* Padding for links */
-    text-decoration: none; /* No underline */
-    font-size: 17px;
+    font-size: 18px;
+    color: white;
+    display: inline-block;
+    font-family: cursive;
+    position: relative;
+    padding: 0 20px;
+    cursor: pointer;
+    z-index: 5;
+    min-width: 25%;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
 }
 
 .navbar a:hover {
-    background-color: #e0e0e0; /* Slightly darker on hover */
-    color: #333; /* Darker text color on hover */
+    color: white; /* Darker text color on hover */
+    transform: translateY(-3px);
 }
 
 .navbar a.active {
-    background-color: #ccc; /* Neutral color for active link */
-    color: #000; /* Darker text color for active link */
+    color: white; /* Darker text color for active link */
 }
 
+
+
 /* Add margin-top to the body or main content to prevent overlap */
-body {
+/*body {
     margin-top: 60px; /* Adjust based on navbar height */
-}
+
