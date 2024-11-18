@@ -13,3 +13,4 @@
 - Wrote the sprint 3 planning in the Excel.Time spent: 1h30
 - Wrote the User Stories for Sprint 2. Time spent: 1h30
 - Wrote the task breakdown and precised the dependencies and estimated efforts. Time spent: 1h00
+- Helped coordinate and set team meeting 
