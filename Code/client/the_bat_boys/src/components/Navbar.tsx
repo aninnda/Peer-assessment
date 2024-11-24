@@ -28,6 +28,11 @@ const Navbar: React.FC = () => {
               className={({ isActive }) => (isActive? 'nav-link active' : 'nav-link')}>
               Forum
             </NavLink>
+            <NavLink
+              to="/graph"
+              className={({ isActive }) => (isActive? 'nav-link active' : 'nav-link')}>
+              Graph
+            </NavLink>
           </div>
         </div>
       </div>

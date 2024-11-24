@@ -156,6 +156,30 @@ app.get('/ratings', (req, res) => {
     });
 });
 
+
+app.get('/graph', (req, res) => {
+    const currentUsername = req.session.user.username;
+
+    const query = `
+        SELECT
+        AVG(conceptualContribution) AS conceptual_avg,
+        AVG(practicalContribution) AS practical_avg,
+        AVG(workEthic) AS work_ethic_avg,
+        AVG(cooperation) AS cooperation_avg
+        FROM ratings
+        WHERE rated_username = ?
+        `
+
+    db.query(query, [currentUsername], (err, results) => {
+        if (err) {
+            console.error('Error fetching graph data:', err);
+            res.status(500).json({ message: 'Error fetching graph data' });
+            return;
+        }
+        res.status(200).json(results[0]);
+    });
+});
+
 app.post('/ratings', (req, res) => {
     const { rater_username, rated_username, rated_name, team, ratings, comments } = req.body;  
 

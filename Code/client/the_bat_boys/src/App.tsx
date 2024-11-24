@@ -7,6 +7,7 @@ import './App.css';
 import TeamForm from './components/TeamForm';
 import Ratings from './components/Ratings';
 import TBD from './components/TBD';
+import Graph from './components/Graph';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = 'http://localhost:3000';
@@ -23,6 +24,7 @@ function App() {
         <Route path="/teams" element={<TeamForm />} />
         <Route path="/ratings" element={<Ratings />} />
         <Route path="/other" element={<TBD/ >} />
+        <Route path="/graph" element={<Graph />} />
       </Routes>
       </div>
       </>
