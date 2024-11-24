@@ -59,3 +59,11 @@ textarea {
     border-radius: 5px;
     padding: 10px;
 } */
+button {
+    z-index: 10;
+    position: relative;
+}
+textarea {
+    z-index: 10;
+    position: relative;
+}

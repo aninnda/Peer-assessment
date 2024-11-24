@@ -16,6 +16,8 @@ const Ratings: React.FC = () => {
   const [ratingTable, setRatingTable] = useState<any[]>([]);
   const [showSummaryTable, setShowSummaryTable] = useState(false);
   const [showDetailedTable, setShowDetailedTable] = useState(false);
+  const [team, setTeam] = useState<string | null>(null);
+  const [avgRatingTable, setAvgRatingTable] = useState<any[]>([]);
 
   const handleSummaryClick = () => {
     setShowSummaryTable(!showSummaryTable);
@@ -30,7 +32,9 @@ const Ratings: React.FC = () => {
     const fetchRoleAndUser = async () => {
       try {
         const response = await axios.get("http://localhost:3000/session", { withCredentials: true });
+        console.log(response.data);
         setRole(response.data.role);
+        setTeam(response.data.team);
         setStudentUsername(response.data.username);
       } catch (error) {
         console.error("Error fetching session:", error);
@@ -46,7 +50,7 @@ const Ratings: React.FC = () => {
         const response = await axios.get("http://localhost:3000/users", { withCredentials: true });
         setStudents(response.data.map((user: { username: string }) => user.username));
 
-        const initialRatings: { [key: string]: any } = {};
+        const initialRatings: { [key: string]: { cooperation: number, conceptual: number, practical: number, ethic: number, comments: string } } = {};
         response.data.forEach((user: { username: string }) => {
           initialRatings[user.username] = {
             cooperation: 0,
@@ -66,33 +70,57 @@ const Ratings: React.FC = () => {
 
   // Fetch the student's team
   useEffect(() => {
-    const fetchTeam = async () => {
-      if (studentUsername) {
-        try {
-          const response = await axios.get(`http://localhost:3000/teams`, { withCredentials: true });
-          const team = response.data.selectedStudents;
-
-          setTeamMembers(team.filter((member: string) => member !== studentUsername));
-        } catch (error) {
-          console.error("Error fetching team data:", error);
-        }
-      }
-    };
-    fetchTeam();
-  }, [studentUsername]);
+    if (team) {
+        const fetchTeamMembers = async () => {
+            try {
+                const response = await axios.get("http://localhost:3000/ratings", { withCredentials: true });
+                setTeamMembers(response.data); // Set the fetched team members
+            } catch (error) {
+                console.error("Error fetching team members:", error);
+            }
+        };
+        fetchTeamMembers();
+    } else {
+        console.log("Team name is not available");
+    }
+  }, [team]); 
+const handleRatingChange = (student: string, category: string, value: number) => {
+  setRatings((prevRatings: any) => ({
+    ...prevRatings,
+    [student]: {
+      ...prevRatings[student],
+      [category]: value,
+    },
+  }));
+};
+const handleCommentsChange = (student: string, value: string) => {
+  setRatings((prevRatings: any) => ({
+    ...prevRatings,
+    [student]: {
+      ...prevRatings[student],
+      comments: value,
+    },
+  }));
+};
 
   const handleSave = async () => {
     if (!selectedStudent) return;
 
     setIsSubmitting(true);
     try {
-      await axios.post('http://localhost:3000/ratings', {
+      const ratingData = {
         rater_username: studentUsername,
         rated_username: selectedStudent,
-        team_name: '',
+        rated_name: selectedStudent,
+        team: team,
         ratings: ratings[selectedStudent],
-        comments: comments,
-      }, { withCredentials: true });
+        comments: ratings[selectedStudent]?.comments,
+      };
+      
+      // Submit the rating to the backend
+      await axios.post('http://localhost:3000/ratings', ratingData, { withCredentials: true });
+
+
 
       setShowConfirmation(true);
       await fetchRatingTable();
@@ -116,6 +144,19 @@ const Ratings: React.FC = () => {
       console.error("Error fetching ratings table:", error);
     }
   };
+
+  const fetchAvgRatings = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/average-ratings', { withCredentials: true });
+      setAvgRatingTable(response.data);
+    } catch (error) {
+      console.error("Error fetching ratings table:", error);
+    }
+  }
+  useEffect(() => {
+    fetchAvgRatings();
+  }, []);
+
 
   if (role !== 'instructor' && role !== 'student') {
     return (
@@ -148,28 +189,66 @@ const Ratings: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {/* Add rows here */}
+              {avgRatingTable.map((student) => (
+                  <tr key={student.student_id}>
+                    <td>{student.student_id}</td>
+                    <td>{student.name}</td>
+                    <td>{student.team}</td>
+                    <td>{student.cooperation_avg}</td>
+                    <td>{student.conceptual_avg}</td>
+                    <td>{student.practical_avg}</td>
+                    <td>{student.work_ethic_avg}</td>
+                    <td>{student.overall_avg}</td>
+                    <td>{student.peers_responded}</td>
+                  </tr>
+                ))
+              }
             </tbody>
           </table>
         )}
-        <button className="detailed-button" onClick={handleDetailedClick}>Detailed View</button>
-        {showDetailedTable && (
-          <table className="ratings-table detailed-view">
-            <thead>
-              <tr>
-                <th>Member</th>
-                <th>Cooperation</th>
-                <th>Conceptual</th>
-                <th>Practical</th>
-                <th>Work Ethic</th>
-                <th>Average</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Add rows here */}
-            </tbody>
-          </table>
+         <button className="detailed-button" onClick={handleDetailedClick}>Detailed View</button>
+        {showDetailedTable && selectedStudent && (
+          <div>
+            <h2>Team: {team}</h2>
+            <h3>Student Username: {selectedStudent}</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Cooperation</th>
+                  <th>Conceptual</th>
+                  <th>Practical</th>
+                  <th>Work Ethic</th>
+                  <th>Average</th>
+                </tr>
+              </thead>
+              <tbody>
+                {teamMembers.map((member: any) => (
+                  <tr key={member.rater_username}>
+                    <td>{member.rater_username}</td>
+                    <td>{member.cooperation}</td>
+                    <td>{member.conceptualContribution}</td>
+                    <td>{member.practicalContribution}</td>
+                    <td>{member.workEthic}</td>
+                    <td>
+                      {(
+                        (member.cooperation + member.conceptualContribution + member.practicalContribution + member.workEthic) /
+                        4
+                      ).toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <h4>Comments:</h4>
+            <ul>
+              {teamMembers.map((member: any) => (
+                <li key={member.rater_username}>{member.comments}</li>
+              ))}
+            </ul>
+          </div>
         )}
+        <p></p>
       </div>
     );
   }
@@ -178,56 +257,57 @@ const Ratings: React.FC = () => {
     return (
       <div className="ratings-container">
         <Navbar />
-        <h1 className="ratings-title">Student Ratings</h1>
-        {showConfirmation ? (
-          <div className="confirmation-box">
-            <h2>Rating Submitted Successfully!</h2>
-            <p>Your rating has been successfully sent.</p>
-            <button className="continue-rating-button" onClick={handleContinueRating}>Continue Rating</button>
-          </div>
-        ) : selectedStudent ? (
-          <div className="rating-box">
-            <h2>Rate {selectedStudent}</h2>
-            {['Cooperation', 'Conceptual Contribution', 'Practical Contribution', 'Work Ethic'].map((category, idx) => (
-              <div key={idx} className="rating-category">
-                <label>{category}</label>
-                <div className="rating-scale">
-                  {[1, 2, 3, 4, 5].map((num) => (
-                    <button
-                      key={num}
-                      className={`rating-button ${ratings[selectedStudent][category.toLowerCase().replace(' ', '')] === num ? 'selected' : ''}`}
-                    >
-                      {num}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-            <div className="comments-box">
-              <label>Comments</label>
-              <textarea
-                className="comments-textarea"
-                value={ratings[selectedStudent]?.comments}
-              />
+        <div className="container_ratings">
+          <h1>Student Rating</h1>
+          {showConfirmation ? (
+            <div className="confirmation-box">
+              <p>Please confirm rating submission.</p>
+              <button className="continue-rating-button" onClick={handleContinueRating}>Confirm Rating</button>
             </div>
-            <button className="save-button" onClick={handleSave} disabled={isSubmitting}>Save</button>
-          </div>
-        ) : (
-          <div className="team-members-list">
-            <h2>Select a student to rate:</h2>
-            <ul>
-              {teamMembers.map((student) => (
-                <li key={student} className="team-member">
-                  {student}
-                  <button className="rate-button" onClick={() => setSelectedStudent(student)}>Rate</button>
-                </li>
+          ) : selectedStudent ? (
+            <div className="rating-box">
+              <h2>Rate {selectedStudent}</h2>
+              {['cooperation', 'conceptual', 'practical', 'ethic'].map((category, idx) => (
+                <div key={idx}>
+                  <label>{category.charAt(0).toUpperCase() + category.slice(1)}</label>
+                  <div className="rating-scale">
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <button
+                        key={num}
+                        className={ratings[selectedStudent][category] === num ? 'selected' : ''}
+                        onClick={() => handleRatingChange(selectedStudent, category, num)}
+                      >
+                        {num}
+                      </button>
+                    ))}
+                  </div>
+                  </div>
               ))}
-            </ul>
-          </div>
-        )}
-      </div>
+              <div>
+                <label>Comments</label>
+                <textarea
+                  value={ratings[selectedStudent]?.comments}
+                  onChange={(e) => handleCommentsChange(selectedStudent, e.target.value)}
+                />
+              </div>
+              <button className="save-button" onClick={handleSave} disabled={isSubmitting}>Save</button>
+              </div>
+          ) : (
+            <div>
+              <h2>Select a student to rate:</h2>
+              <ul>
+                {teamMembers.map((student) => (
+                  <li key={student}>
+                    {student}
+                    <button className="rate-button" onClick={() => setSelectedStudent(student)}>Rate</button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+        </div>
     );
   }
 };
-
 export default Ratings;

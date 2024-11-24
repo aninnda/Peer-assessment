@@ -16,6 +16,8 @@
     color: #f9f9f9;
     border: 0;
     transition: all 0.375s;
+    z-index: 10;
+    position: relative;
   }
   
   .dashboard-button:hover {
@@ -24,6 +26,8 @@
     border: 1px solid #008cff;
     text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
     box-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #ffffff, 0 0 100px #008cff;
+    z-index: 10;
+    position: relative;
   }
   
   .dashboard-table {
