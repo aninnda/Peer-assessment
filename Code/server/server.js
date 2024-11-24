@@ -235,15 +235,21 @@ app.get("/other", (req, res) => {
   });
 
   app.post("/other", (req, res) => {
-    const author = req.session.user.username; // Use the logged-in user's username
-    const { commentText } = req.body;
+    const author = req.session.user.username;
+    const { commentText, commentDate } = req.body;
     const query = "INSERT INTO forum (author, content) VALUES (?, ?)";
-    db.query(query, [author, commentText], (err, results) => {
+    db.query(query, [author, commentText, commentDate], (err, results) => {
       if (err) {
         console.error('Error inserting comment:', err);
         return res.status(500).json({ message: 'Error inserting comment' });
       }
-      res.status(201).json({ id: results.insertId, author, content: commentText });
+      db.query("SELECT * FROM forum WHERE id = ?", [results.insertId], (err, newComment) => {
+        if (err) {
+          console.error('Error fetching new comment:', err);
+          return res.status(500).json({ message: 'Error fetching new comment' });
+        }
+        res.status(201).json(newComment[0]);
+      });
     });
 });
 
