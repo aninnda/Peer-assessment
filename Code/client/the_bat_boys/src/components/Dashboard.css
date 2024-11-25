@@ -1,4 +1,17 @@
 
+.dashboard-button {
+  cursor: pointer;
+  padding: 15px 30px;
+  margin: 15px 10px;
+  font-size: 18px;
+  border-radius: 8px;
+  color: #000000;
+  border: 0;
+
+  position: relative;
+}
+
+/* 
 .dashboard-title {
     font-size: 36px;
     font-weight: 400;
@@ -60,4 +73,4 @@
     margin-top: 20px;
     height: 50px;
   }
-  
+   */

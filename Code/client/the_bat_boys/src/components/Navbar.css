@@ -5,7 +5,7 @@
   }
 
 .navbar {
-    background: rgb(24 14 56 / 44%);
+    background: rgba(22, 14, 49, 0.44);
     backdrop-filter: blur(16px);
     position: fixed; /* Make the navbar fixed */
     top: 0; /* Stick to the top of the viewport */
@@ -28,7 +28,6 @@
     font-size: 18px;
     color: white;
     display: inline-block;
-    font-family: cursive;
     position: relative;
     padding: 0 20px;
     cursor: pointer;
@@ -40,12 +39,11 @@
 }
 
 .navbar a:hover {
-    color: white; /* Darker text color on hover */
-    transform: translateY(-3px);
+    color: black; /* Darker text color on hover */
 }
 
 .navbar a.active {
-    color: white; /* Darker text color for active link */
+    color: black; /* Darker text color for active link */
 }
 
 

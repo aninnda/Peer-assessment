@@ -62,7 +62,7 @@ const Login = () => {
         ) : (        
             <div className="login-container">
                 <div className="login-section">
-                    <button className="login-toggle-button" onClick={toggleLoginType}>
+                    <button className="button" onClick={toggleLoginType}>
                         {isStudentLogin ? 'Switch to Instructor' : 'Switch to Student'}
                     </button>
 
@@ -88,7 +88,7 @@ const Login = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                             />
-                            <button className="login-submit-button" type="submit">
+                            <button className="button" type="submit">
                                 Login as {isStudentLogin ? "Student" : "Instructor"}
                             </button>
                         </form>

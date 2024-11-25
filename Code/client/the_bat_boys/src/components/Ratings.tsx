@@ -157,6 +157,26 @@ const handleCommentsChange = (student: string, value: string) => {
     fetchAvgRatings();
   }, []);
 
+  const downloadCSV = () => {
+    fetch('/ratings/csv')
+        .then((response) => {
+            if (response.ok) {
+                return response.blob();
+            }
+            throw new Error('Failed to download CSV');
+        })
+        .then((blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'ratings.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        })
+        .catch((error) => console.error('Error downloading CSV:', error));
+  };
+
 
   if (role !== 'instructor' && role !== 'student') {
     return (
@@ -169,6 +189,7 @@ const handleCommentsChange = (student: string, value: string) => {
 
   if (role === 'instructor') {
     return (
+      <div>
       <div className="dashboard-container">
         <Navbar />
         <h1 className="dashboard-title">Welcome to the Dashboard</h1>
@@ -250,7 +271,15 @@ const handleCommentsChange = (student: string, value: string) => {
         )}
         <p></p>
       </div>
+      <div>
+        <button onClick={downloadCSV} style={{ marginTop: '20px' }}>
+          Download CSV
+        </button>
+      </div>
+      </div>
+      
     );
+    
   }
 
   if (role === 'student') {

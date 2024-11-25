@@ -15,6 +15,9 @@ const db = require('./db.js');
 //Authorization and authentication
 require('dotenv').config(); //Tokens secret key
 
+const fs = require('fs');
+const path = require('path');
+const { format } = require('fast-csv');
 
 app.use(express.json());
 app.use(cors(corsOptions));
@@ -309,6 +312,39 @@ app.get('/test-session', (req, res) => {
 
 app.get('/retrieve-session', (req, res) => {
     res.send(req.session.userRole || 'No session data');
+});
+
+app.get('/ratings/csv', (req, res) => {
+    const query = 'SELECT * FROM ratings';
+
+    db.query(query, (error, results) => {
+        if (error) {
+            return res.status(500).json({ error: 'Database query failed' });
+        }
+
+        // Define CSV file path
+        const filePath = path.join(__dirname, 'ratings.csv');
+        const writeStream = fs.createWriteStream(filePath);
+
+        // Write CSV data
+        format({ headers: true })
+            .on('error', (err) => console.error(err))
+            .on('finish', () => {
+                // Send file as response
+                res.download(filePath, 'ratings.csv', (err) => {
+                    if (err) {
+                        console.error(err);
+                    }
+                    // Clean up: Delete file after download
+                    fs.unlinkSync(filePath);
+                });
+            })
+            .pipe(writeStream);
+
+        // Write rows to the CSV file
+        results.forEach((row) => writeStream.write(row));
+        writeStream.end();
+    });
 });
 
 
