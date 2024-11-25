@@ -158,6 +158,9 @@ app.get('/ratings', (req, res) => {
 
 
 app.get('/graph', (req, res) => {
+
+if(req.session.user.role == 'student') {
+
     const currentUsername = req.session.user.username;
 
     const query = `
@@ -178,6 +181,9 @@ app.get('/graph', (req, res) => {
         }
         res.status(200).json(results[0]);
     });
+} else if(req.session.user.role == 'instructor') {
+    res.status(200).json({ message: 'Instructor role detected' });
+    }
 });
 
 app.post('/ratings', (req, res) => {
