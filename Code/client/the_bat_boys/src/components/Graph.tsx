@@ -5,6 +5,7 @@ import './Ratings.css';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, scales } from 'chart.js';
 import { _scaleRangesChanged, color } from 'chart.js/helpers';
+import html2canvas from 'html2canvas';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -99,32 +100,48 @@ const Graph = () => {
             display: false,
           },
           title: {
-            display: true,
+            display: false,
             text: 'Your average rating per component',
             color: 'white',
             font:{size: 15},
           },
         },
         scales: { 
-            y: { beginAtZero: true, ticks: { color: 'white'}},
-            x: { ticks: { color: 'white'}}
+            y: { beginAtZero: true, ticks: { color: 'black'}},
+            x: { ticks: { color: 'black'}}
         },
       };
     
       const hasRatings = Object.values(averageRatings).some(value => value !== null);
     
+
+      const handleScreenshot = () => {
+        const element = document.querySelector('.graph-container') as HTMLElement;
+        if (element) {
+          html2canvas(element).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'graph-screenshot.png';
+            link.href = canvas.toDataURL();
+            link.click();
+          });
+        }
+      };
+
+      
       return (
         <div>
           <Navbar />
           <div className="graph-container">
-            <h2>Average Ratings per Component</h2>
             {role === 'student' && hasRatings ? (
               <div className="chart-wrapper">
+                <h2 style={{color: 'black'}}>Your Average Rating per Component</h2>
                 <Bar data={studentData} options={options} />
               </div>
             ) : role === 'instructor' ? (
               <div className="chart-wrapper">
+                <h2 style={{color: 'black'}}>Average Ratings per Component per Team </h2>
                 <Bar data={teamData} options={options} />
+                <p><button onClick={handleScreenshot}>Take Screenshot</button></p>
               </div>
             ) : (
               <p>You have not yet been rated.</p>
