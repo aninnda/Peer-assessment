@@ -21,20 +21,30 @@ const Graph = () => {
         cooperation_avg: null,
       });
     
+      const [teamRatings, setTeamRatings] = useState<any[]>([]);
+      const [role, setRole] = useState<string | null>(null);
+
       useEffect(() => {
-        const fetchAverageRatings = async () => {
+        const fetchRoleAndData = async () => {
           try {
-            const response = await axios.get('http://localhost:3000/graph', { withCredentials: true });
-            setAverageRatings(response.data);
+            const sessionResponse = await axios.get('http://localhost:3000/session', { withCredentials: true });
+            setRole(sessionResponse.data.role);
+    
+            const graphResponse = await axios.get('http://localhost:3000/graph', { withCredentials: true });
+            if (sessionResponse.data.role === 'student') {
+              setAverageRatings(graphResponse.data);
+            } else if (sessionResponse.data.role === 'instructor') {
+              setTeamRatings(graphResponse.data);
+            }
           } catch (error) {
-            console.error('Error fetching average ratings:', error);
+            console.error('Error fetching data:', error);
           }
         };
     
-        fetchAverageRatings();
+        fetchRoleAndData();
       }, []);
     
-      const data = {
+      const studentData = {
         labels: ['Conceptual Contribution', 'Practical Contribution', 'Work Ethic', 'Cooperation'],
         datasets: [
           {
@@ -54,7 +64,34 @@ const Graph = () => {
           },
         ],
       };
-    
+      
+      const teamData = {
+        labels: teamRatings.map(team => team.team),
+        datasets: [
+          {
+            label: 'Conceptual Contribution',
+            data: teamRatings.map(team => team.conceptual_avg),
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          },
+          {
+            label: 'Practical Contribution',
+            data: teamRatings.map(team => team.practical_avg),
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          },
+          {
+            label: 'Work Ethic',
+            data: teamRatings.map(team => team.work_ethic_avg),
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          },
+          {
+            label: 'Cooperation',
+            data: teamRatings.map(team => team.cooperation_avg),
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          },
+        ],
+      };
+
+
       const options = {
         responsive: true,
         plugins: {
@@ -81,9 +118,13 @@ const Graph = () => {
           <Navbar />
           <div className="graph-container">
             <h2>Average Ratings per Component</h2>
-            {hasRatings ? (
+            {role === 'student' && hasRatings ? (
               <div className="chart-wrapper">
-                <Bar data={data} options={options} />
+                <Bar data={studentData} options={options} />
+              </div>
+            ) : role === 'instructor' ? (
+              <div className="chart-wrapper">
+                <Bar data={teamData} options={options} />
               </div>
             ) : (
               <p>You have not yet been rated.</p>

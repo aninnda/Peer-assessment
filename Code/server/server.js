@@ -159,7 +159,7 @@ app.get('/ratings', (req, res) => {
 
 app.get('/graph', (req, res) => {
 
-if(req.session.user.role == 'student') {
+if(req.session.user.role === 'student') {
 
     const currentUsername = req.session.user.username;
 
@@ -181,8 +181,26 @@ if(req.session.user.role == 'student') {
         }
         res.status(200).json(results[0]);
     });
-} else if(req.session.user.role == 'instructor') {
-    res.status(200).json({ message: 'Instructor role detected' });
+} else if(req.session.user.role === 'instructor') {
+    const query = `
+            SELECT
+            team,
+            AVG(conceptualContribution) AS conceptual_avg,
+            AVG(practicalContribution) AS practical_avg,
+            AVG(workEthic) AS work_ethic_avg,
+            AVG(cooperation) AS cooperation_avg
+            FROM ratings
+            GROUP BY team
+        `;
+
+        db.query(query, (err, results) => {
+            if (err) {
+                console.error('Error fetching graph data for teams:', err);
+                res.status(500).json({ message: 'Error fetching graph data for teams' });
+                return;
+            }
+            res.status(200).json(results);
+        });
     }
 });
 
