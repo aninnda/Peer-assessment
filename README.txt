@@ -53,6 +53,18 @@ Login with newly created users (userId, password, role)
 To see created users open http://localhost:3000/users
 
 CODE REVIEW: 
+We reviewed our code and ensured that the following were done well:
+1. Code reviewed in manageable chunks.
+2. We made sure that the coding standards were followed.
+3. Readablity and Maintainability: We made sure that the code is easy to read and that the variable names are appropriate.
+4. Functionality and Requirements: The code meets the requirements for the associated issues.
+5. Error Handling: Our code handles unexpected case scenarios.
+6. The code is secure and performs well
+7. Testing: We verified that the code includes tests for new functionality or bug fixes
+8. We left appropriate comments in the code.
+9. We reviewed the code to make sure that there is no code duplication (refactoring).
+10. All the dependencies are listed.
+
 
 CODING STANDARDS:
 Coding standards were clearly defined and effectively communicated to the team. 
