@@ -48,19 +48,14 @@ Open 2 terminal -->
 On client terminal write "npm run dev"
 On server terminal write "npm start"
 Open http://localhost:5173
-Using request.rest, create users using POST and /users
+Create users using POST and /users
 Login with newly created users (userId, password, role)
 To see created users open http://localhost:3000/users
 
-
-TO DO
-- Backend code need to be fixed
-    - Separation into multiple files
-- Add a go back button for team name selection
-- Add a modify team option to add/remove students
-- CSS!!!!!
-
-.env needs to be place in gitignore and put password of personal db
+CODE REVIEW: 
+CODING STANDARDS:
+CODE MAINTENANCE USING ANALYSIS TOOLS:
+PIPELINE:
 
 
 
