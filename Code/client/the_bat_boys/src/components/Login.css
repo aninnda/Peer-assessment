@@ -1,9 +1,9 @@
 body {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
+  height: 100%;
+  margin: 100px;
+  padding: 100px;
 }
 
 .login-container {

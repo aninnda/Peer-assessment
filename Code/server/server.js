@@ -335,6 +335,24 @@ app.get('/ratings/csv', (req, res) => {
     });
 });
 
+app.get('/teams/ratings', (req, res) => {
+    const query = `
+        SELECT r.*, u.team
+        FROM ratings r
+        JOIN users u ON r.rated_username = u.username
+        ORDER BY u.team, r.rated_username;
+    `;
+
+    db.query(query, (error, results) => {
+        if (error) {
+            console.error('Error fetching ratings:', error);
+            return res.status(500).json({ error: 'Database query failed' });
+        }
+        res.json(results);
+    });
+});
+
+
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');

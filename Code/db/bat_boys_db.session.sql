@@ -54,6 +54,14 @@ CREATE TABLE IF NOT EXISTS ratings (
     UNIQUE (rater_username, rated_username)
 );
 
+INSERT INTO ratings (rater_username, rated_username, rated_name, team, conceptualContribution, practicalContribution, workEthic, cooperation, comments) VALUES
+('dylan', 'samy', 'Samy Mezimez', 'bat boys', 5, 5, 5, 5, 'Great job!'),
+('samy', 'dylan', 'Dylan Moos', 'bat boys', 5, 5, 5, 5, 'Great job!'),
+('daniel', 'aymen', 'Aymen Mefti', 'team 2', 5, 5, 5, 5, 'Great job!'),
+('aymen', 'daniel', 'Daniel Pinto', 'team 2', 5, 5, 5, 5, 'Great job!'),
+('karim', 'daniel', 'Daniel Pinto', 'team 2', 5, 5, 5, 5, 'Great job!'),
+('daniel', 'karim', 'Karim Naja', 'team 2', 5, 5, 5, 5, 'Great job!');
+
 CREATE TABLE IF NOT EXISTS forum (
     id INT AUTO_INCREMENT PRIMARY KEY,
     author VARCHAR(50) NOT NULL,

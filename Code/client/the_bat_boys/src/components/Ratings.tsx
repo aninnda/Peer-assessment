@@ -17,6 +17,10 @@ const Ratings: React.FC = () => {
   const [showDetailedTable, setShowDetailedTable] = useState(false);
   const [team, setTeam] = useState<string | null>(null);
   const [avgRatingTable, setAvgRatingTable] = useState<any[]>([]);
+  const [teamData, setTeamData] = useState(false);
+  const [teamsData, setTeamsData] = useState<{ [key: string]: any[] }>({});
+  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
+  const [selectedStudentDetailed, setSelectedStudentDetailed] = useState(null);
 
   const handleSummaryClick = () => {
     setShowSummaryTable(!showSummaryTable);
@@ -83,6 +87,9 @@ const Ratings: React.FC = () => {
         console.log("Team name is not available");
     }
   }, [team]); 
+
+
+
 const handleRatingChange = (student: string, category: string, value: number) => {
   setRatings((prevRatings: any) => ({
     ...prevRatings,
@@ -160,6 +167,22 @@ const handleCommentsChange = (student: string, value: string) => {
     window.open('http://localhost:3000/ratings/csv', '_blank');
   };
 
+  useEffect(() => {
+    fetch('/teams/ratings', { credentials: 'include' })  // Include session cookies
+      .then((response) => response.json())
+      .then((data) => {
+        // Group data by team name
+        const groupedByTeam = data.reduce((acc: { [key: string]: any[] }, rating: any) => {
+          const { team } = rating;
+          if (!acc[team]) acc[team] = [];
+          acc[team].push(rating);
+          return acc;
+        }, {});
+        setTeamsData(groupedByTeam);
+      })
+      .catch((error) => console.error('Error fetching data:', error));
+  }, []);
+
 
   if (role !== 'instructor' && role !== 'student') {
     return (
@@ -211,46 +234,190 @@ const handleCommentsChange = (student: string, value: string) => {
           </table>
         )}
          <button className="detailed-button" onClick={handleDetailedClick}>Detailed View</button>
-        {showDetailedTable && selectedStudent && (
+        {showDetailedTable && (
           <div>
-            <h2>Team: {team}</h2>
-            <h3>Student Username: {selectedStudent}</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>Member</th>
-                  <th>Cooperation</th>
-                  <th>Conceptual</th>
-                  <th>Practical</th>
-                  <th>Work Ethic</th>
-                  <th>Average</th>
-                </tr>
-              </thead>
-              <tbody>
-                {teamMembers.map((member: any) => (
-                  <tr key={member.rater_username}>
-                    <td>{member.rater_username}</td>
-                    <td>{member.cooperation}</td>
-                    <td>{member.conceptualContribution}</td>
-                    <td>{member.practicalContribution}</td>
-                    <td>{member.workEthic}</td>
-                    <td>
-                      {(
-                        (member.cooperation + member.conceptualContribution + member.practicalContribution + member.workEthic) /
-                        4
-                      ).toFixed(2)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <h4>Comments:</h4>
-            <ul>
-              {teamMembers.map((member: any) => (
-                <li key={member.rater_username}>{member.comments}</li>
-              ))}
-            </ul>
+          {/* Team: Bat Boys */}
+          <div className="team-container">
+            <h2>Team: Bat Boys</h2>
+    
+            {/* Student: Samy Mezimez */}
+            <div className="student-container" style={{ marginLeft: '20px' }}>
+              <h3>Student: Samy Mezimez</h3>
+              <div className="rating-container" style={{ marginLeft: '40px' }}>
+                <p><strong>Rated by:</strong> Dylan</p>
+                <table border={1} cellPadding="5" style={{ width: '400px', marginBottom: '10px' }}>
+                  <thead>
+                    <tr>
+                      <th>Cooperation</th>
+                      <th>Conceptual</th>
+                      <th>Practical</th>
+                      <th>Work Ethic</th>
+                      <th>Average</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p><strong>Comment:</strong> Great job!</p>
+              </div>
+            </div>
+    
+            {/* Student: Dylan Moos */}
+            <div className="student-container" style={{ marginLeft: '20px' }}>
+              <h3>Student: Dylan Moos</h3>
+              <div className="rating-container" style={{ marginLeft: '40px' }}>
+                <p><strong>Rated by:</strong> Samy</p>
+                <table border={1} cellPadding="5" style={{ width: '400px', marginBottom: '10px' }}>
+                  <thead>
+                    <tr>
+                      <th>Cooperation</th>
+                      <th>Conceptual</th>
+                      <th>Practical</th>
+                      <th>Work Ethic</th>
+                      <th>Average</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p><strong>Comment:</strong> Great job!</p>
+              </div>
+            </div>
           </div>
+    
+          {/* Team: Team 2 */}
+          <div className="team-container">
+            <h2>Team: Team 2</h2>
+    
+            {/* Student: Aymen Mefti */}
+            <div className="student-container" style={{ marginLeft: '20px' }}>
+              <h3>Student: Aymen Mefti</h3>
+              <div className="rating-container" style={{ marginLeft: '40px' }}>
+                <p><strong>Rated by:</strong> Daniel</p>
+                <table border={1} cellPadding="5" style={{ width: '400px', marginBottom: '10px' }}>
+                  <thead>
+                    <tr>
+                      <th>Cooperation</th>
+                      <th>Conceptual</th>
+                      <th>Practical</th>
+                      <th>Work Ethic</th>
+                      <th>Average</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p><strong>Comment:</strong> Great job!</p>
+              </div>
+            </div>
+    
+            {/* Student: Daniel Pinto */}
+            <div className="student-container" style={{ marginLeft: '20px' }}>
+              <h3>Student: Daniel Pinto</h3>
+              {/* Rated by Aymen */}
+              <div className="rating-container" style={{ marginLeft: '40px' }}>
+                <p><strong>Rated by:</strong> Aymen</p>
+                <table border={1} cellPadding="5" style={{ width: '400px', marginBottom: '10px' }}>
+                  <thead>
+                    <tr>
+                      <th>Cooperation</th>
+                      <th>Conceptual</th>
+                      <th>Practical</th>
+                      <th>Work Ethic</th>
+                      <th>Average</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p><strong>Comment:</strong> Great job!</p>
+              </div>
+    
+              {/* Rated by Karim */}
+              <div className="rating-container" style={{ marginLeft: '40px' }}>
+                <p><strong>Rated by:</strong> Karim</p>
+                <table border={1} cellPadding="5" style={{ width: '400px', marginBottom: '10px' }}>
+                  <thead>
+                    <tr>
+                      <th>Cooperation</th>
+                      <th>Conceptual</th>
+                      <th>Practical</th>
+                      <th>Work Ethic</th>
+                      <th>Average</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p><strong>Comment:</strong> Great job!</p>
+              </div>
+            </div>
+    
+            {/* Student: Karim Naja */}
+            <div className="student-container" style={{ marginLeft: '20px' }}>
+              <h3>Student: Karim Naja</h3>
+              <div className="rating-container" style={{ marginLeft: '40px' }}>
+                <p><strong>Rated by:</strong> Daniel</p>
+                <table border={1} cellPadding="5" style={{ width: '400px', marginBottom: '10px' }}>
+                  <thead>
+                    <tr>
+                      <th>Cooperation</th>
+                      <th>Conceptual</th>
+                      <th>Practical</th>
+                      <th>Work Ethic</th>
+                      <th>Average</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5</td>
+                      <td>5.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p><strong>Comment:</strong> Great job!</p>
+              </div>
+            </div>
+          </div>
+        </div>
         )}
         <p></p>
       </div>
