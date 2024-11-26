@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import axios from 'axios';
-import './Ratings.css'; 
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, scales } from 'chart.js';
 import { _scaleRangesChanged, color } from 'chart.js/helpers';
