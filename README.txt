@@ -66,19 +66,6 @@ We reviewed our code and ensured that the following were done well:
 10. All the dependencies are listed.
 
 
-CODING STANDARDS:
-Coding standards were clearly defined and effectively communicated to the team. 
-1.Choose meaningful variable and function names. 
-2.Camel case vs snake case.
-3.Use of comments and whitespace effectively to improve readability.
-4.Using indentation and consistent formatting. ...
-5.What should be documented? ...
-6.Creating reader-friendly README files to make our project easier to understand.
-
-
-CODE MAINTENANCE USING ANALYSIS TOOLS:
-
-PIPELINE:
 
 
 
