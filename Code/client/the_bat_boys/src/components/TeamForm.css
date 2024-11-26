@@ -1,0 +1,30 @@
+
+.team-list {
+    background-color: white; 
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    padding: 10px 50px; 
+    margin: auto; 
+    width: 150%; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .team-container {
+    margin-bottom: 20px; 
+  }
+  
+  .team-container ul {
+    list-style-type: none; 
+    padding-left: 0; 
+  }
+  
+  .team-container li {
+    padding: 5px 0; 
+    border-bottom: 1px solid #eee;
+  }
+  
+  .team-container li:last-child {
+    border-bottom: none;
+  }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import axios from "axios";
+import "./TeamForm.css";
 
 interface FormData {
   team_name: string;
