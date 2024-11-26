@@ -21,4 +21,10 @@
 - Reviewed the written documents
 - Helped setting team meeting
 - Total time spent: approximately 9 hours
+
+## Sprint 4
+- Made the Demo video with Samy
+- Made the MVC repo organization with Samy
+- Code review with Aymen and Samy
+- Prepared the powerpoint slides with Daniel and Aymen
   
