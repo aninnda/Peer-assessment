@@ -15,9 +15,7 @@ const db = require('./db.js');
 //Authorization and authentication
 require('dotenv').config(); //Tokens secret key
 
-const fs = require('fs');
-const path = require('path');
-const { format } = require('fast-csv');
+const { Parser } = require('json2csv');
 
 app.use(express.json());
 app.use(cors(corsOptions));
@@ -319,31 +317,21 @@ app.get('/ratings/csv', (req, res) => {
 
     db.query(query, (error, results) => {
         if (error) {
-            return res.status(500).json({ error: 'Database query failed' });
+            console.error('Database query failed:', error);
+            return res.status(500).send('Error fetching ratings data');
         }
 
-        // Define CSV file path
-        const filePath = path.join(__dirname, 'ratings.csv');
-        const writeStream = fs.createWriteStream(filePath);
+        try {
+            const json2csvParser = new Parser({ header: true });
+            const csv = json2csvParser.parse(results);
 
-        // Write CSV data
-        format({ headers: true })
-            .on('error', (err) => console.error(err))
-            .on('finish', () => {
-                // Send file as response
-                res.download(filePath, 'ratings.csv', (err) => {
-                    if (err) {
-                        console.error(err);
-                    }
-                    // Clean up: Delete file after download
-                    fs.unlinkSync(filePath);
-                });
-            })
-            .pipe(writeStream);
-
-        // Write rows to the CSV file
-        results.forEach((row) => writeStream.write(row));
-        writeStream.end();
+            res.setHeader('Content-Type', 'text/csv');
+            res.setHeader('Content-Disposition', 'attachment; filename=ratings.csv');
+            res.send(csv);
+        } catch (err) {
+            console.error('CSV generation error:', err);
+            res.status(500).send('Error generating CSV');
+        }
     });
 });
 

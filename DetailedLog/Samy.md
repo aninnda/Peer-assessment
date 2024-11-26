@@ -27,4 +27,14 @@
 ## Sprint 3
 - Added rating page for instructors showing summary/detailed view      2h
 - Fixed team page for instructor/students with backend      3h
+- Added CI pipeline on github action        1h
+- Added multiple test for each feature      2h
+- Separated tasks for the team in a meeting         0h30
+
+## Sprint 4
+- Added export to CSV on rating page for instructor     1h
+- Fixed multiple issues with database and detailed view         2h
+- Completely removed CSS and replaced it because it did not look good       1h
+- Assisted Dylan and Aninnda on Graph functionality     2h
+- Worked on unit tests with Dylan.
 

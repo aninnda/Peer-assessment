@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
-import './Ratings.css';
 import axios from 'axios';
 
 const Ratings: React.FC = () => {
@@ -158,23 +157,7 @@ const handleCommentsChange = (student: string, value: string) => {
   }, []);
 
   const downloadCSV = () => {
-    fetch('/ratings/csv')
-        .then((response) => {
-            if (response.ok) {
-                return response.blob();
-            }
-            throw new Error('Failed to download CSV');
-        })
-        .then((blob) => {
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'ratings.csv');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        })
-        .catch((error) => console.error('Error downloading CSV:', error));
+    window.open('http://localhost:3000/ratings/csv', '_blank');
   };
 
 
@@ -325,12 +308,14 @@ const handleCommentsChange = (student: string, value: string) => {
             <div>
               <h2>Select a student to rate:</h2>
               <ul>
-                {teamMembers.map((student) => (
+                {teamMembers
+                  .filter((student) => student !== studentUsername)
+                  .map((student) => (
                   <li key={student}>
                     {student}
                     <button className="rate-button" onClick={() => setSelectedStudent(student)}>Rate</button>
                   </li>
-                ))}
+                  ))}
               </ul>
             </div>
           )}

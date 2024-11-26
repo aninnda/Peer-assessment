@@ -23,6 +23,7 @@
     "express-session": "^1.18.1",
     "fast-csv": "^5.0.2",
     "html2canvas": "^1.4.1",
+    "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.11.3",

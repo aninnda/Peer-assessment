@@ -5,72 +5,9 @@
   margin: 15px 10px;
   font-size: 18px;
   border-radius: 8px;
-  color: #000000;
+  color: black;
   border: 0;
 
   position: relative;
 }
 
-/* 
-.dashboard-title {
-    font-size: 36px;
-    font-weight: 400;
-    margin-bottom: 20px;
-    color: #ffffff;
-  }
-  
-  .dashboard-button {
-    cursor: pointer;
-    padding: 15px 30px;
-    margin: 15px 10px;
-    font-size: 18px;
-    border-radius: 8px;
-    background: var(--color-primary);
-    color: #f9f9f9;
-    border: 0;
-    transition: all 0.375s;
-    z-index: 10;
-    position: relative;
-  }
-  
-  .dashboard-button:hover {
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid #008cff;
-    text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
-    box-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #ffffff, 0 0 100px #008cff;
-    z-index: 10;
-    position: relative;
-  }
-  
-  .dashboard-table {
-    width: 100%;
-    margin: 20px auto;
-    border-collapse: collapse;
-    background: rgb(55 32 122 / 44%);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  
-  .dashboard-table th,
-  .dashboard-table td {
-    padding: 15px;
-    font-size: 16px;
-    text-align: left;
-    color: #f9f9f9;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .dashboard-table-header th {
-    background: rgba(0, 0, 0, 0.2);
-  }
-  
-  .dashboard-table-body tr:hover {
-    background: rgba(0, 0, 0, 0.3);
-  }
-  
-  .dashboard-footer-space {
-    margin-top: 20px;
-    height: 50px;
-  }
-   */

@@ -1,5 +1,3 @@
-/* Navbar.css */
-
 * {
     box-sizing: border-box;
   }
@@ -45,10 +43,3 @@
 .navbar a.active {
     color: black; /* Darker text color for active link */
 }
-
-
-
-/* Add margin-top to the body or main content to prevent overlap */
-/*body {
-    margin-top: 60px; /* Adjust based on navbar height */
-
