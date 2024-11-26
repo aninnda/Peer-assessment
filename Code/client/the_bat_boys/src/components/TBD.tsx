@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
-import './TBD.css';
 
 const TBD = () => {
     type content = {
@@ -21,7 +20,7 @@ const TBD = () => {
       }).catch((error) => {
           console.error('Error fetching comments:', error);
       });
-  }, []);
+    }, []);
 
  // Handle posting a new comment
  const handlePostContent = () => {
