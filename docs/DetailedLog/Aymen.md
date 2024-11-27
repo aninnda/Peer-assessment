@@ -17,5 +17,5 @@
 ## Sprint 4 
 - Helped Daniel with the user stories. Time spent: 1h00
 - Did the meeting minutes for this sprint and verified the previous ones. Time spent: 30 min
-- Worked on code review(testing, code standards, paperwork, etc.) with Aninnda. Time spent:1h30
+- Worked on code review(testing, code standards, paperwork, etc.) with Aninnda. Time spent:3h30
 - Worked on powerpoint with Aninnda and Daniel. Time spent: 2h00
