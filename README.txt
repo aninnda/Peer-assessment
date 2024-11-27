@@ -48,19 +48,27 @@ Open 2 terminal -->
 On client terminal write "npm run dev"
 On server terminal write "npm start"
 Open http://localhost:5173
-Using request.rest, create users using POST and /users
+Create users using POST and /users
 Login with newly created users (userId, password, role)
 To see created users open http://localhost:3000/users
 
+CODE REVIEW: 
+We reviewed our code and ensured that the following were done well:
+1. Code reviewed in manageable chunks.
+2. We made sure that the coding standards were followed.
+3. Readablity and Maintainability: We made sure that the code is easy to read and that the variable names are appropriate.
+4. Functionality and Requirements: The code meets the requirements for the associated issues.
+5. Error Handling: Our code handles unexpected case scenarios.
+6. The code is secure and performs well
+7. Testing: We verified that the code includes tests for new functionality or bug fixes
+8. We left appropriate comments in the code.
+9. We reviewed the code to make sure that there is no code duplication (refactoring).
+10. All the dependencies are listed.
 
-TO DO
-- Backend code need to be fixed
-    - Separation into multiple files
-- Add a go back button for team name selection
-- Add a modify team option to add/remove students
-- CSS!!!!!
+DEMO CODE:
+Down below you will find the link that will show you a full demo of our peer assessment system
+https://drive.google.com/file/d/1h596sGPFgfQxlsEHr4AVAGuadNIDoRJZ/view?usp=sharing
 
-.env needs to be place in gitignore and put password of personal db
 
 
 

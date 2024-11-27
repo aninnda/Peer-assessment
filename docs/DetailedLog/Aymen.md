@@ -9,7 +9,7 @@
 - Made sure to write enough details and fixed the format of every meeting minutes files since sprint 1. Time spent: 2h00 
 - Made sur that every task in every user stories was made as an issue in github, created labels for the User stories and associated every tasks with them and created a basic format(did not do the details inside) for them. Time spent: 1h30
 - Created seven acceptance tests for the user stories, labeled them and wrote everything. Time spent: 1h00
-  
+    
 
 
   
