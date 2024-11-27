@@ -27,4 +27,5 @@
 - Made the MVC repo organization with Samy
 - Code review with Aymen and Samy
 - Prepared the powerpoint slides with Daniel and Aymen
+- Total time spent: approximately 7.5 hours
   
