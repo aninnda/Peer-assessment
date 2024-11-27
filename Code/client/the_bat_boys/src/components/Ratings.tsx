@@ -286,11 +286,11 @@ const handleCommentsChange = (student: string, value: string) => {
                   </thead>
                   <tbody>
                     <tr>
+                      <td>4</td>
                       <td>5</td>
+                      <td>4</td>
                       <td>5</td>
-                      <td>5</td>
-                      <td>5</td>
-                      <td>5.00</td>
+                      <td>4.50</td>
                     </tr>
                   </tbody>
                 </table>

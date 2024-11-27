@@ -24,3 +24,9 @@ button {
 button:hover {
   background-color: #484a96;
 }
+
+
+.rating-scale button.selected{
+  background-color: blue;
+  
+}

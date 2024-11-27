@@ -33,6 +33,10 @@ const Navbar: React.FC = () => {
               className={({ isActive }) => (isActive? 'nav-link active' : 'nav-link')}>
               Graph
             </NavLink>
+            <NavLink
+              to="/login">
+              Logout
+            </NavLink>
           </div>
         </div>
       </div>
