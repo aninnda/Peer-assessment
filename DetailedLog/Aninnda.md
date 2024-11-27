@@ -23,8 +23,8 @@
 - Total time spent: approximately 9 hours
 
 ## Sprint 4
-- Made the Demo video with Samy
-- Made the MVC repo organization with Samy
-- Code review with Aymen and Samy
+- Made the Demo video 
+- Made the MVC repo organization 
+- Code review with Aymen
 - Prepared the powerpoint slides with Daniel and Aymen
   
