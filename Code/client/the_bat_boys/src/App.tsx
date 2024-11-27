@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Login from './components/Login';
+import Login from './components/Login/Login';
 import Dashboard from './components/Dashboard';
 import axios from 'axios';
 import './App.css';
 import TeamForm from './components/TeamForm';
 import Ratings from './components/Ratings';
-import TBD from './components/TBD';
-import Graph from './components/Graph';
+import TBD from './TBD';
+import Graph from '../Graph';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = 'http://localhost:3000';
