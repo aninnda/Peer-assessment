@@ -67,7 +67,7 @@ We reviewed our code and ensured that the following were done well:
 
 DEMO CODE:
 Down below you will find the link that will show you a full demo of our peer assessment system
-https://drive.google.com/file/d/1h596sGPFgfQxlsEHr4AVAGuadNIDoRJZ/view?usp=sharing
+https://drive.google.com/file/d/1DYY_8vzA6Aw_Juhsl5JPP3nDiJcoLHda/view?usp=drive_link
 
 
 
