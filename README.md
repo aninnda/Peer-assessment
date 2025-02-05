@@ -1,4 +1,4 @@
-Project description: 
+## Project description: 
 For university team projects, a Peer Assessment System is intended to let students
 assess their teammates' performance and contributions using four main criteria:
 cooperation, intellectual contribution, practical contribution, and work ethic.
@@ -10,7 +10,7 @@ other student from their team to rate on a scale from 1-5 on the four main crite
 Instructors have the ability to create teams (Possibly create students) and to overview
 the ratings given by the student to other students.
 
-Authors:
+## Authors:
 Samy Mezimez 40275766
 Daniel Pinto 40276779
 Aninnda Kumar Datta 40298954
@@ -18,11 +18,11 @@ Dylan Moos 40296816
 Karim Naja 40235546
 Aymen Mefti 40299611
 
-Sprint planning excel link:
+## Sprint planning excel link:
 https://liveconcordia-my.sharepoint.com/:x:/g/personal/an_datta_live_concordia_ca/ESvfvA-PWkBFgd6LmiTCUGsBnDO1w4oGn-RXZWzlCd9Wtg?e=GRJdQ9
 
 
-Dependencies:
+## Dependencies:
 To be installed in both directory: Code/client/the_bat_boys + Code/server
 npm i express axios cors nodemon bcrypt mysql jsonwebtoken dotenv react-router-dom cookie-parser express-session chart.js react-chartjs-2 html2canvas
 
@@ -38,7 +38,7 @@ react-router-dom //
 cookie-parser 
 express-session
 
-VS Code Extensions:
+## VS Code Extensions:
 REST client
 
 How to run website:
@@ -65,7 +65,7 @@ We reviewed our code and ensured that the following were done well:
 9. We reviewed the code to make sure that there is no code duplication (refactoring).
 10. All the dependencies are listed.
 
-DEMO CODE:
+### DEMO CODE:
 Down below you will find the link that will show you a full demo of our peer assessment system
 https://drive.google.com/file/d/1DYY_8vzA6Aw_Juhsl5JPP3nDiJcoLHda/view?usp=drive_link
 
