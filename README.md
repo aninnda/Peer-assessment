@@ -11,16 +11,12 @@ Instructors have the ability to create teams (Possibly create students) and to o
 the ratings given by the student to other students.
 
 ## Authors:
-Samy Mezimez 40275766
-Daniel Pinto 40276779
-Aninnda Kumar Datta 40298954
-Dylan Moos 40296816
-Karim Naja 40235546
-Aymen Mefti 40299611
-
-## Sprint planning excel link:
-https://liveconcordia-my.sharepoint.com/:x:/g/personal/an_datta_live_concordia_ca/ESvfvA-PWkBFgd6LmiTCUGsBnDO1w4oGn-RXZWzlCd9Wtg?e=GRJdQ9
-
+-  Samy Mezimez 40275766
+-  Daniel Pinto 40276779
+-  Aninnda Kumar Datta 40298954
+-  Dylan Moos 40296816
+-  Karim Naja 40235546
+-  Aymen Mefti 40299611
 
 ## Dependencies:
 To be installed in both directory: Code/client/the_bat_boys + Code/server
