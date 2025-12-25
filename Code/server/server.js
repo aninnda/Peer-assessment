@@ -1,361 +1,371 @@
-//Backend
 const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const bcrypt = require('bcrypt');
+
 const app = express();
 
-// Cookies
-const session = require('express-session');
+// Middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../client')));
 
-//Communication with frontend
-const cors = require('cors');
-const corsOptions = { origin: 'http://localhost:5173', credentials: true }; //To allow requests from the client
-
-//Database
-const db = require('./db.js');
-
-//Authorization and authentication
-require('dotenv').config(); //Tokens secret key
-
-const { Parser } = require('json2csv');
-
-app.use(express.json());
-app.use(cors(corsOptions));
+// Session middleware
 app.use(session({
-    secret: 'secret',
+    secret: 'your-secret-key',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { 
         secure: false,
         httpOnly: true,
-        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
 }));
 
-
-app.get('/users', (req, res) => {
-    db.query('SELECT * FROM users', (err, results) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).send();
-        }
-        console.log(req.session.user);
-        res.json(results);
-    });
-});
-
-//Add users (register possibly)
-app.post('/users', async (req, res) => {
-    try {
-        const user = { name: req.body.username, password: req.body.password, role: req.body.role };
-        users.push(user);
-        res.status(201).send();
-    } catch {
-        res.status(500).send();
-    }
-});
-
-app.post('/users/login', (req, res) => {
-    const { name, password, role } = req.body;
-    const query = 'SELECT * FROM users WHERE username = ? AND role = ?';
-    db.query(query, [name, role], (error, results) => {
-        if (error) {
-            console.error('Error querying the database:', error);
-            return res.status(500).send('Internal server error');
-        }
-        const user = results[0];
-        if (!user || password !== user.password) {
-            return res.status(400).send({ message: 'Invalid credentials' });
-        }
-        req.session.user = user;
-        res.status(200).send({ message: 'Success', user: { name: user.username, role: user.role } });
-    });
-});
-
-
-// Create teams
-app.post('/teams', async (req, res) => {
-    const { teamName, selectedStudents } = req.body;
-    const query = 'INSERT INTO teams (team_name, members) VALUES (?, ?)';
-    const studentsJson = JSON.stringify(selectedStudents);
-    db.query(query, [teamName, studentsJson], (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send();
-        }
-        const updateQuery = 'UPDATE users SET team = ? WHERE username = ?';
-        selectedStudents.forEach(student => {
-            db.query(updateQuery, [teamName, student], (err) => {
-                if (err) {
-                    console.error(`Error updating team for student ${student}:`, err);
-                }
-            });
-        });
-        res.status(201).json({ message: 'Team created', team: { name: teamName, teamId: result.insertId } });
-    });
-});
-
-
-app.get('/teams', (req, res) => {
-    const query = 'SELECT * FROM teams';
-
-    db.query(query, (err, results) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).send();
-        }
-        res.json(results);
-    });
-});
-
-app.post('/teams/assign', (req, res) => {
-    const { studentId, teamId } = req.body;
-    // Logic for assigning students to a team
-    res.status(200).send({ message: 'Student assigned to team successfully' });
-});
-
-
-app.get('/session', (req, res) => {
-    res.json(req.session.user);
-})
-
-app.post('/session', (req, res) => {
-    req.session.user = req.body;
-    res.send();
-})
-
-
-
-app.get('/ratings', (req, res) => { 
-
-    const loggedInUsername = req.session.user.username;  // Save username
-    // Find current user's team
-    const teamQuery = 'SELECT team FROM users WHERE username = ?';
-
-    db.query(teamQuery, [loggedInUsername], (err, teamResults) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Error finding team');
-        }
-
-        const teamName = teamResults[0]?.team;
-
-        if (!teamName) {
-            return res.status(404).send('Team not found for the user');
-        }
-
-        // Find team members
-        const membersQuery = 'SELECT username FROM users WHERE team = ?';
-
-        db.query(membersQuery, [teamName], (err, membersResults) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).send('Error retrieving team members');
-            }
-
-            const teamMembers = membersResults.map(member => member.username);
-            res.json(teamMembers);
-        });
-    });
-});
-
-
-app.get('/graph', (req, res) => {
-
-if(req.session.user.role === 'student') {
-
-    const currentUsername = req.session.user.username;
-
-    const query = `
-        SELECT
-        AVG(conceptualContribution) AS conceptual_avg,
-        AVG(practicalContribution) AS practical_avg,
-        AVG(workEthic) AS work_ethic_avg,
-        AVG(cooperation) AS cooperation_avg
-        FROM ratings
-        WHERE rated_username = ?
-        `
-
-    db.query(query, [currentUsername], (err, results) => {
-        if (err) {
-            console.error('Error fetching graph data:', err);
-            res.status(500).json({ message: 'Error fetching graph data' });
-            return;
-        }
-        res.status(200).json(results[0]);
-    });
-} else if(req.session.user.role === 'instructor') {
-    const query = `
-            SELECT
-            team,
-            AVG(conceptualContribution) AS conceptual_avg,
-            AVG(practicalContribution) AS practical_avg,
-            AVG(workEthic) AS work_ethic_avg,
-            AVG(cooperation) AS cooperation_avg
-            FROM ratings
-            GROUP BY team
-        `;
-
-        db.query(query, (err, results) => {
-            if (err) {
-                console.error('Error fetching graph data for teams:', err);
-                res.status(500).json({ message: 'Error fetching graph data for teams' });
-                return;
-            }
-            res.status(200).json(results);
-        });
-    }
-});
-
-app.post('/ratings', (req, res) => {
-    const { rater_username, rated_username, rated_name, team, ratings, comments } = req.body;  
-
-    const query = `
-        INSERT INTO ratings (rater_username, rated_username, rated_name, team, conceptualContribution, practicalContribution, workEthic, cooperation, comments) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE
-            conceptualContribution = VALUES(conceptualContribution),
-            practicalContribution = VALUES(practicalContribution),
-            workEthic = VALUES(workEthic),
-            cooperation = VALUES(cooperation),
-            comments = VALUES(comments)
-        `;
-
-    const values = [
-        rater_username,
-        rated_username,
-        rated_name,
-        team,
-        ratings.conceptual,
-        ratings.practical,
-        ratings.ethic,
-        ratings.cooperation,
-        comments
-    ];
-    db.query(query, values, (err) => {
-        if (err) {
-          console.error('Error saving rating:', err);
-          res.status(500).send('Error saving rating');
-        } else {
-          res.status(200).send('Rating saved successfully');
-        }
-    });
-});
-
-app.get('/average-ratings', async (req, res) => {
-    try {
-      // SQL query to calculate averages for each student
-      const query = `
-        SELECT 
-          rated_username AS student_id,
-          team,
-          AVG(cooperation) AS cooperation_avg,
-          AVG(conceptualContribution) AS conceptual_avg,
-          AVG(practicalContribution) AS practical_avg,
-          AVG(workEthic) AS work_ethic_avg,
-          (AVG(cooperation) + AVG(conceptualContribution) + AVG(practicalContribution) + AVG(workEthic)) / 4 AS overall_avg,
-          COUNT(rater_username) AS peers_responded
-        FROM ratings
-        GROUP BY rated_username, team
-      `;
-  
-      // Execute the query
-      db.query(query, (err, results) => {
-        if (err) {
-          console.error('Error fetching average ratings:', err);
-          res.status(500).json({ message: 'Error fetching average ratings' });
-          return;
-        }
-        res.status(200).json(results);
-      });
-    } catch (error) {
-      console.error('Server error:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
-
-
-app.get("/other", (req, res) => {
-    db.query("SELECT * FROM forum", (err, results) => {
-      if (err) {
-        throw err;
+// Database setup
+const db = new sqlite3.Database(path.join(__dirname, 'database.db'), (err) => {
+    if (err) {
+        console.error('Error opening database:', err);
     } else {
-      res.json(results);
+        console.log('Connected to SQLite database');
+        initDatabase();
     }
-    });
-  });
+});
 
-  app.post("/other", (req, res) => {
-    const author = req.session.user.username;
-    const { commentText, commentDate } = req.body;
-    const query = "INSERT INTO forum (author, content) VALUES (?, ?)";
-    db.query(query, [author, commentText, commentDate], (err, results) => {
-      if (err) {
-        console.error('Error inserting comment:', err);
-        return res.status(500).json({ message: 'Error inserting comment' });
-      }
-      db.query("SELECT * FROM forum WHERE id = ?", [results.insertId], (err, newComment) => {
+// Initialize database tables
+function initDatabase() {
+    db.serialize(() => {
+        // Users table
+        db.run(`CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            role TEXT NOT NULL CHECK(role IN ('student', 'instructor')),
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )`);
+
+        // Groups table
+        db.run(`CREATE TABLE IF NOT EXISTS groups (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )`);
+
+        // Group members table
+        db.run(`CREATE TABLE IF NOT EXISTS group_members (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            group_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            FOREIGN KEY (group_id) REFERENCES groups(id),
+            FOREIGN KEY (user_id) REFERENCES users(id),
+            UNIQUE(group_id, user_id)
+        )`);
+
+        // Assessments table
+        db.run(`CREATE TABLE IF NOT EXISTS assessments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            reviewer_id INTEGER NOT NULL,
+            reviewee_id INTEGER NOT NULL,
+            group_id INTEGER NOT NULL,
+            cooperation_score INTEGER CHECK(cooperation_score BETWEEN 1 AND 5),
+            conceptual_score INTEGER CHECK(conceptual_score BETWEEN 1 AND 5),
+            practical_score INTEGER CHECK(practical_score BETWEEN 1 AND 5),
+            work_ethic_score INTEGER CHECK(work_ethic_score BETWEEN 1 AND 5),
+            comments TEXT,
+            submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (reviewer_id) REFERENCES users(id),
+            FOREIGN KEY (reviewee_id) REFERENCES users(id),
+            FOREIGN KEY (group_id) REFERENCES groups(id),
+            UNIQUE(reviewer_id, reviewee_id, group_id)
+        )`);
+    });
+}
+
+// Authentication middleware
+function requireAuth(req, res, next) {
+    if (req.session && req.session.userId) {
+        next();
+    } else {
+        res.status(401).json({ error: 'Authentication required' });
+    }
+}
+
+function requireInstructor(req, res, next) {
+    if (req.session && req.session.role === 'instructor') {
+        next();
+    } else {
+        res.status(403).json({ error: 'Instructor access required' });
+    }
+}
+
+// Routes
+
+// Register
+app.post('/api/register', async (req, res) => {
+    const { username, password, role } = req.body;
+    
+    if (!username || !password || !role) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    if (role !== 'student' && role !== 'instructor') {
+        return res.status(400).json({ error: 'Invalid role' });
+    }
+
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        db.run('INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
+            [username, hashedPassword, role],
+            function(err) {
+                if (err) {
+                    if (err.message.includes('UNIQUE constraint failed')) {
+                        return res.status(400).json({ error: 'Username already exists' });
+                    }
+                    return res.status(500).json({ error: 'Error creating user' });
+                }
+                res.json({ message: 'User registered successfully', userId: this.lastID });
+            }
+        );
+    } catch (error) {
+        res.status(500).json({ error: 'Error hashing password' });
+    }
+});
+
+// Login
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    
+    if (!username || !password) {
+        return res.status(400).json({ error: 'Username and password are required' });
+    }
+
+    db.get('SELECT * FROM users WHERE username = ?', [username], async (err, user) => {
         if (err) {
-          console.error('Error fetching new comment:', err);
-          return res.status(500).json({ message: 'Error fetching new comment' });
+            return res.status(500).json({ error: 'Database error' });
         }
-        res.status(201).json(newComment[0]);
-      });
-    });
-});
-
-
-app.get('/test-session', (req, res) => {
-    req.session.testData = 'Hello, session!';
-    res.send('Session data set');
-});
-
-app.get('/retrieve-session', (req, res) => {
-    res.send(req.session.userRole || 'No session data');
-});
-
-app.get('/ratings/csv', (req, res) => {
-    const query = 'SELECT * FROM ratings';
-
-    db.query(query, (error, results) => {
-        if (error) {
-            console.error('Database query failed:', error);
-            return res.status(500).send('Error fetching ratings data');
+        
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid credentials' });
         }
 
         try {
-            const json2csvParser = new Parser({ header: true });
-            const csv = json2csvParser.parse(results);
-
-            res.setHeader('Content-Type', 'text/csv');
-            res.setHeader('Content-Disposition', 'attachment; filename=ratings.csv');
-            res.send(csv);
-        } catch (err) {
-            console.error('CSV generation error:', err);
-            res.status(500).send('Error generating CSV');
+            const match = await bcrypt.compare(password, user.password);
+            if (match) {
+                req.session.userId = user.id;
+                req.session.username = user.username;
+                req.session.role = user.role;
+                res.json({ 
+                    message: 'Login successful',
+                    user: {
+                        id: user.id,
+                        username: user.username,
+                        role: user.role
+                    }
+                });
+            } else {
+                res.status(401).json({ error: 'Invalid credentials' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: 'Error comparing passwords' });
         }
     });
 });
 
-app.get('/teams/ratings', (req, res) => {
-    const query = `
-        SELECT r.*, u.team
-        FROM ratings r
-        JOIN users u ON r.rated_username = u.username
-        ORDER BY u.team, r.rated_username;
-    `;
-
-    db.query(query, (error, results) => {
-        if (error) {
-            console.error('Error fetching ratings:', error);
-            return res.status(500).json({ error: 'Database query failed' });
+// Logout
+app.post('/api/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ error: 'Error logging out' });
         }
-        res.json(results);
+        res.json({ message: 'Logged out successfully' });
     });
 });
 
-
-
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+// Get current user
+app.get('/api/user', requireAuth, (req, res) => {
+    db.get('SELECT id, username, role FROM users WHERE id = ?', 
+        [req.session.userId],
+        (err, user) => {
+            if (err) {
+                return res.status(500).json({ error: 'Database error' });
+            }
+            res.json(user);
+        }
+    );
 });
+
+// Create group (instructor only)
+app.post('/api/groups', requireAuth, requireInstructor, (req, res) => {
+    const { name, memberIds } = req.body;
+    
+    if (!name || !memberIds || !Array.isArray(memberIds)) {
+        return res.status(400).json({ error: 'Group name and member IDs are required' });
+    }
+
+    db.run('INSERT INTO groups (name) VALUES (?)', [name], function(err) {
+        if (err) {
+            return res.status(500).json({ error: 'Error creating group' });
+        }
+        
+        const groupId = this.lastID;
+        const stmt = db.prepare('INSERT INTO group_members (group_id, user_id) VALUES (?, ?)');
+        
+        memberIds.forEach(userId => {
+            stmt.run(groupId, userId);
+        });
+        
+        stmt.finalize((err) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error adding group members' });
+            }
+            res.json({ message: 'Group created successfully', groupId });
+        });
+    });
+});
+
+// Get all groups (instructor only)
+app.get('/api/groups', requireAuth, requireInstructor, (req, res) => {
+    db.all(`
+        SELECT g.id, g.name, g.created_at,
+               GROUP_CONCAT(u.username) as members
+        FROM groups g
+        LEFT JOIN group_members gm ON g.id = gm.group_id
+        LEFT JOIN users u ON gm.user_id = u.id
+        GROUP BY g.id
+    `, (err, groups) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(groups);
+    });
+});
+
+// Get user's groups
+app.get('/api/user/groups', requireAuth, (req, res) => {
+    db.all(`
+        SELECT g.id, g.name, g.created_at
+        FROM groups g
+        JOIN group_members gm ON g.id = gm.group_id
+        WHERE gm.user_id = ?
+    `, [req.session.userId], (err, groups) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(groups);
+    });
+});
+
+// Get group members
+app.get('/api/groups/:groupId/members', requireAuth, (req, res) => {
+    const groupId = req.params.groupId;
+    
+    db.all(`
+        SELECT u.id, u.username
+        FROM users u
+        JOIN group_members gm ON u.id = gm.user_id
+        WHERE gm.group_id = ? AND u.id != ?
+    `, [groupId, req.session.userId], (err, members) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(members);
+    });
+});
+
+// Submit assessment
+app.post('/api/assessments', requireAuth, (req, res) => {
+    const { revieweeId, groupId, cooperation, conceptual, practical, workEthic, comments } = req.body;
+    
+    if (!revieweeId || !groupId || !cooperation || !conceptual || !practical || !workEthic) {
+        return res.status(400).json({ error: 'All scores are required' });
+    }
+
+    db.run(`
+        INSERT OR REPLACE INTO assessments 
+        (reviewer_id, reviewee_id, group_id, cooperation_score, conceptual_score, 
+         practical_score, work_ethic_score, comments)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `, [req.session.userId, revieweeId, groupId, cooperation, conceptual, practical, workEthic, comments],
+    function(err) {
+        if (err) {
+            return res.status(500).json({ error: 'Error submitting assessment' });
+        }
+        res.json({ message: 'Assessment submitted successfully', assessmentId: this.lastID });
+    });
+});
+
+// Get assessment results for a user
+app.get('/api/assessments/results/:userId', requireAuth, (req, res) => {
+    const userId = req.params.userId;
+    
+    // Only allow users to view their own results or instructors to view anyone's
+    if (req.session.role !== 'instructor' && req.session.userId != userId) {
+        return res.status(403).json({ error: 'Access denied' });
+    }
+
+    db.all(`
+        SELECT 
+            AVG(cooperation_score) as avg_cooperation,
+            AVG(conceptual_score) as avg_conceptual,
+            AVG(practical_score) as avg_practical,
+            AVG(work_ethic_score) as avg_work_ethic,
+            COUNT(*) as total_assessments
+        FROM assessments
+        WHERE reviewee_id = ?
+        GROUP BY reviewee_id
+    `, [userId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+        
+        db.all(`
+            SELECT 
+                u.username as reviewer_name,
+                a.cooperation_score,
+                a.conceptual_score,
+                a.practical_score,
+                a.work_ethic_score,
+                a.comments,
+                a.submitted_at
+            FROM assessments a
+            JOIN users u ON a.reviewer_id = u.id
+            WHERE a.reviewee_id = ?
+            ORDER BY a.submitted_at DESC
+        `, [userId], (err, details) => {
+            if (err) {
+                return res.status(500).json({ error: 'Database error' });
+            }
+            
+            res.json({
+                summary: results[0] || {},
+                details: details
+            });
+        });
+    });
+});
+
+// Get all students (instructor only)
+app.get('/api/students', requireAuth, requireInstructor, (req, res) => {
+    db.all('SELECT id, username FROM users WHERE role = "student"', (err, students) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(students);
+    });
+});
+
+// Serve the main page
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/index.html'));
+});
+
+if (require.main === module) {
+    app.listen(3000, () => {
+        console.log('Server is running on port 3000');
+    });
+}
 
 module.exports = app;
